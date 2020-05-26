@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Fonts -->
+  <!-- <link href="https://fonts.googleapis.com/css?family=Charmonman|Montserrat&display=swap" rel="stylesheet"> -->
+  <!-- <link href="https://fonts.googleapis.com/css2?family=Charmonman:wght@400;700&family=Indie+Flower&display=swap" rel="stylesheet"> -->
+  <link href="https://fonts.googleapis.com/css2?family=Charmonman:wght@400;700&family=Indie+Flower&family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,800;0,900;1,100;1,200;1,300;1,400;1,600;1,700&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+  <!-- Custom style sheet -->
+  <link rel="stylesheet" href="css/styles.css">
+
+  <!-- Favicon -->
+  <link rel="icon" href="urfavicon.ico">
+
+  <title>Royal Game of Ur</title>
+
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+</head>
+
+<body>
+  <!-- <h1 class="big-heading">The Royal Game of Ur</h1> -->
+
+
+  <section id="title" class="colored-section">
+    <div class="container-fluid">
+
+      <!-- Nav Bar -->
+      <nav class="navbar navbar-expand-lg navbar-dark">
+
+        <a class="navbar-brand" href="">Royal Game of Ur</a>
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="#play">Play</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#rules">Rules</a>
+            </li>
+
+            <!-- <li class="nav-item">
+              <a class="nav-link" href="">placeholder</a>
+            </li> -->
+          </ul>
+
+        </div>
+      </nav>
+
+      <!--row-->
+
+    </div> <!-- container -->
+  </section>
+
+  <!-- Play section -->
+
+  <section id="play" class="colored-section">
+
+    <div class="container dice-container">
+      <!-- <h3>Roll</h3> -->
+      <button type="button" class="roll-button btn btn-outline-light">Roll</button>
+      <div class="row">
+
+        <!-- Dice images -->
+        <div class="col-lg-3 dice">
+          <img class="img1" src="images/die0.png">
+        </div>
+
+        <div class="col-lg-3 dice">
+          <img class="img2" src="images/die0.png">
+        </div>
+
+        <div class="col-lg-3 dice">
+          <img class="img3" src="images/die0.png">
+        </div>
+
+        <div class="col-lg-3 dice">
+          <img class="img4" src="images/die0.png">
+        </div>
+
+      </div>
+    </div>
+
+    <!-- board table -->
+    <section id="board">
+
+      <div class="container">
+
+        <div class="row">
+
+          <!-- player 1 pieces div -->
+          <!-- <div class="col-lg-4 game-format"> -->
+          <div class="col">
+
+            <p id="l1" class="player-label">Player 1</p>
+            <h3 id="player1-status" class="player-status">roll</h3>
+
+            <button id="p11" class="player1piece game-piece"></button>
+            <button id="p12" class="player1piece game-piece"></button>
+            <button id="p13" class="player1piece game-piece"></button>
+            <button id="p14" class="player1piece game-piece"></button>
+            <button id="p15" class="player1piece game-piece"></button>
+            <button id="p16" class="player1piece game-piece"></button>
+            <button id="p17" class="player1piece game-piece"></button>
+            <h3 id="player1-second-status" class="player-second-status"></h3>
+          </div>
+
+          <!--col-->
+
+          <!-- Game board div -->
+          <!-- <div class="col-lg-4 game-format"> -->
+          <div class="col">
+            <!-- <img src="images/UrGameBoard.png" alt="ur-gameboard" class="gameboard"> -->
+            <table class="table table-borderless table-sm">
+              <thead>
+
+              </thead>
+              <tbody>
+                <tr>
+                  <td id="s-03" class="tcell">
+                    <img id="ss03" src="images/spaceWithRosette.png" alt="background" class="background">
+                    <img id="sp03" src="images/possibleMove.png" alt="possible-move" class="possible-move">
+                    <img id="s103" src="images/piece1.png" alt="piece1" class="piece-image">
+                    <img id="s203" src="images/piece2.png" alt="piece2" class="piece-image">
+                  </td>
+                  <td id="s-08" class="tcell">
+                    <img id="s08" src="images/spacebackground.png" alt="background" class="background">
+                    <img id="sp08" src="images/possibleMove.png" alt="possible-move" class="possible-move">
+                    <img id="s108" src="images/piece1.png" alt="piece1" class="piece-image">
+                    <img id="s208" src="images/piece2.png" alt="piece2" class="piece-image">
+                  </td>
+                  <td id="s-07" class="tcell">
+                    <img id="s707" src="images/spaceWithRosette.png" alt="background" class="background">
+                    <img id="sp07" src="images/possibleMove.png" alt="possible-move" class="possible-move">
+                    <img id="s107" src="images/piece1.png" alt="piece1" class="piece-image">
+                    <img id="s207" src="images/piece2.png" alt="piece2" class="piece-image">
+                  </td>
+                </tr>
+                <tr>
+                  <td id="s-02" class="tcell">
+                    <img id="ss02" src="images/spacebackground.png" alt="background" class="background">
+                    <img id="sp02" src="images/possibleMove.png" alt="possible-move" class="possible-move">
+                    <img id="s102" src="images/piece1.png" alt="piece1" class="piece-image">
+                    <img id="s202" src="images/piece2.png" alt="piece2" class="piece-image">
+                  </td>
+                  <td id="s-09" class="tcell">
+                    <img id="ss09" src="images/spacebackground.png" alt="background" class="background">
+                    <img id="sp09" src="images/possibleMove.png" alt="possible-move" class="possible-move">
+                    <img id="s109" src="images/piece1.png" alt="piece1" class="piece-image">
+                    <img id="s209" src="images/piece2.png" alt="piece2" class="piece-image">
+                  </td>
+                  <td id="s-06" class="tcell">
+                    <img id="ss06" src="images/spacebackground.png" alt="background" class="background">
+                    <img id="sp06" src="images/possibleMove.png" alt="possible-move" class="possible-move">
+                    <img id="s106" src="images/piece1.png" alt="piece1" class="piece-image">
+                    <img id="s206" src="images/piece2.png" alt="piece2" class="piece-image">
+                  </td>
+
+                </tr>
+                <tr>
+                  <td id="s-01" class="tcell">
+                    <img id="s01" src="images/spacebackground.png" alt="background" class="background">
+                    <img id="sp01" src="images/possibleMove.png" alt="possible-move" class="possible-move">
+                    <img id="s101" src="images/piece1.png" alt="piece1" class="piece-image">
+                    <img id="s201" src="images/piece2.png" alt="piece2" class="piece-image">
+                  </td>
+                  <td id="s-10" class="tcell">
+                    <img id="s10" src="images/spacebackground.png" alt="background" class="background">
+                    <img id="sp10" src="images/possibleMove.png" alt="possible-move" class="possible-move">
+                    <img id="s110" src="images/piece1.png" alt="piece1" class="piece-image">
+                    <img id="s210" src="images/piece2.png" alt="piece2" class="piece-image">
+                  </td>
+                  <td id="S-05" class="tcell">
+                    <img id="s05" src="images/spacebackground.png" alt="background" class="background">
+                    <img id="sp05" src="images/possibleMove.png" alt="possible-move" class="possible-move">
+                    <img id="s105" src="images/piece1.png" alt="piece1" class="piece-image">
+                    <img id="s205" src="images/piece2.png" alt="piece2" class="piece-image">
+                  </td>
+
+                </tr>
+                <tr>
+                  <td id="s-00" class="tcell">
+                    <img id="s00" src="images/spacebackground.png" alt="background" class="background">
+                    <img id="sp00" src="images/possibleMove.png" alt="possible-move" class="possible-move">
+                    <img id="s100" src="images/piece1.png" alt="piece1" class="piece-image">
+                    <img id="s200" src="images/piece2.png" alt="piece2" class="piece-image">
+                  </td>
+                  <td id="s-11" class="tcell">
+                    <img id="s11" src="images/spaceWithRosette.png" alt="background" class="background">
+                    <img id="sp11" src="images/possibleMove.png" alt="possible-move" class="possible-move">
+                    <img id="s111" src="images/piece1.png" alt="piece1" class="piece-image">
+                    <img id="s211" src="images/piece2.png" alt="piece2" class="piece-image">
+                  </td>
+                  <td id="s-04" class="tcell">
+                    <img id="s04" src="images/spacebackground.png" alt="background" class="background">
+                    <img id="sp04" src="images/possibleMove.png" alt="possible-move" class="possible-move">
+                    <img id="s104" src="images/piece1.png" alt="piece1" class="piece-image">
+                    <img id="s204" src="images/piece2.png" alt="piece2" class="piece-image">
+                  </td>
+
+                </tr>
+                <tr>
+                  <td class="tcell"></td>
+                  <td id="s-12" class="tcell">
+                    <img id="s12" src="images/spacebackground.png" alt="background" class="background">
+                    <img id="sp12" src="images/possibleMove.png" alt="possible-move" class="possible-move">
+                    <img id="s112" src="images/piece1.png" alt="piece1" class="piece-image">
+                    <img id="s212" src="images/piece2.png" alt="piece2" class="piece-image">
+                  </td>
+                  <td class="tcell"></td>
+
+                </tr>
+                <tr>
+                  <!-- This is the move indicator for "home" for player 2 -->
+                  <td id="s20" class="tcell"><img id="sp20" src="images/possibleMove.png" alt="possible-move" class="possible-move"></td>
+
+                  <td id="s-13" class="tcell">
+                    <img id="s13" src="images/spacebackground.png" alt="background" class="background">
+                    <img id="sp13" src="images/possibleMove.png" alt="possible-move" class="possible-move">
+                    <img id="s113" src="images/piece1.png" alt="piece1" class="piece-image">
+                    <img id="s213" src="images/piece2.png" alt="piece2" class="piece-image">
+                  </td>
+                  <!-- This is the move indicator for "home" for player 2 -->
+                  <td id="s21" class="tcell"><img id="sp21" src="images/possibleMove.png" alt="possible-move" class="possible-move"></td>
+                </tr>
+                <tr>
+                  <td id="s-17" class="tcell">
+                    <img id="s17" src="images/spaceWithRosette.png" alt="background" class="background">
+                    <img id="sp17" src="images/possibleMove.png" alt="possible-move" class="possible-move">
+                    <img id="s117" src="images/piece1.png" alt="piece1" class="piece-image">
+                    <img id="s217" src="images/piece2.png" alt="piece2" class="piece-image">
+                  </td>
+                  <td id="s-14" class="tcell">
+                    <img id="s14" src="images/spacebackground.png" alt="background" class="background">
+                    <img id="sp14" src="images/possibleMove.png" alt="possible-move" class="possible-move">
+                    <img id="s114" src="images/piece1.png" alt="piece1" class="piece-image">
+                    <img id="s214" src="images/piece2.png" alt="piece2" class="piece-image">
+                  </td>
+                  <td id="s-19" class="tcell">
+                    <img id="s19" src="images/spaceWithRosette.png" alt="background" class="background">
+                    <img id="sp19" src="images/possibleMove.png" alt="possible-move" class="possible-move">
+                    <img id="s119" src="images/piece1.png" alt="piece1" class="piece-image">
+                    <img id="s219" src="images/piece2.png" alt="piece2" class="piece-image">
+                  </td>
+
+                </tr>
+                <tr>
+                  <td id="s-16" class="tcell">
+                    <img id="s16" src="images/spacebackground.png" alt="background" class="background">
+                    <img id="sp16" src="images/possibleMove.png" alt="possible-move" class="possible-move">
+                    <img id="s116" src="images/piece1.png" alt="piece1" class="piece-image">
+                    <img id="s216" src="images/piece2.png" alt="piece2" class="piece-image">
+                  </td>
+                  <td id="s-15" class="tcell">
+                    <img id="s15" src="images/spacebackground.png" alt="background" class="background">
+                    <img id="sp15" src="images/possibleMove.png" alt="possible-move" class="possible-move">
+                    <img id="s115" src="images/piece1.png" alt="piece1" class="piece-image">
+                    <img id="s215" src="images/piece2.png" alt="piece2" class="piece-image">
+                  </td>
+                  <td id="s-18" class="tcell">
+                    <img id="s18" src="images/spacebackground.png" alt="background" class="background">
+                    <img id="sp18" src="images/possibleMove.png" alt="possible-move" class="possible-move">
+                    <img id="s118" src="images/piece1.png" alt="piece1" class="piece-image">
+                    <img id="s218" src="images/piece2.png" alt="piece2" class="piece-image">
+                  </td>
+
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <!--col-->
+
+          <!-- player 2 pieces div -->
+          <!-- <div class="col-lg-4 game-format"> -->
+          <div class="col">
+
+            <p id="l2" class="player-label">Player 2</p>
+            <h3 id="player2-status" class="player-status"></h3>
+            <button id="p21" class="player2piece game-piece"></button>
+            <button id="p22" class="player2piece game-piece"></button>
+            <button id="p23" class="player2piece game-piece"></button>
+            <button id="p24" class="player2piece game-piece"></button>
+            <button id="p25" class="player2piece game-piece"></button>
+            <button id="p26" class="player2piece game-piece"></button>
+            <button id="p27" class="player2piece game-piece"></button>
+
+            <h3 id="player2-second-status" class="player-second-status"></h3>
+          </div>
+          <!--col-->
+
+        </div> <!-- row -->
+
+      </div>
+
+    </section>
+
+    <div class="restart-area">
+      <button type="button" class="btn btn-lg btn-outline-light restart-button">Restart Game</button>
+    </div>
+  </section> <!--  play -->
+
+  <!-- Rules section -->
+
+  <section id="rules" class="white-section">
+
+    <div class="container-fluid">
+      <h3 class="section-heading">Rules</h3>
+      <div class="row">
+        <div class="col-lg-6">
+          <p class="rules-text"><em><strong>Goal:</strong></em> Move all your pieces through your game board path before your opponent does the same for their path</p>
+          <ul class="rules-text">
+            <li class="rules-li">Play alternates between players after each dice roll, with exceptions noted below</li>
+            <li class="rules-li">A player rolls the dice by pressing the roll button, and moves <strong>one piece</strong> the number rolled (rolls may not be divided among multiple pieces); the game board shows possible moves - click on the space to move there</li>
+            <li class="rules-li">A piece may move to any <strong>unoccupied</strong> space in the player's path</li>
+            <li class="rules-li">If the player moves a piece to a <strong>rosette</strong> (gold star space), the player gets <strong>another turn</strong></li>
+            <li class="rules-li">A player <strong>may not</strong> move to a rosette occupied by an opponent's piece</li>
+            <li class="rules-li">A player <strong>may</strong> move to any other non-rosette space occupied by the opponent along their path</li>
+            <li class="rules-li">If a player's piece lands on a space occupied by the opponent's piece (and the space is <strong>not</strong> a rosette), the piece is sent back to start</li>
+            <li class="rules-li">If a player rolls a <strong>zero</strong>, no pieces move and <strong>play passes to the opponent</strong></li>
+            <li class="rules-li">If a player has <strong>no possible moves</strong> for the number rolled, <strong>play passes to the opponent</strong></li>
+            <li class="rules-li">You must roll the <strong>exact number</strong> to move your piece off the board to its home position</li>
+          </ul>
+
+        </div>
+        <div class="col-lg-6">
+          <img src="images/gameBrdPath.png" alt="Ur-Game-Board-Paths" class="rules-image">
+        </div>
+        <a href="#play" class="rules-play">Play</a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Footer -->
+
+  <footer id="footer" class="colored-section">
+    <div class="container-fluid">
+      <p class="footer">© Copyright 2020 Andrea Grieser</p>
+    </div>
+  </footer>
+
+
+  <!-- jQuery stuff; obviously needs to go ABOVE my code -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <!-- my javascript -->
+  <script src="ur.js" charset="utf-8"></script>
+
+</body>
+
+</html>

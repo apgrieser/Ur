@@ -1,0 +1,346 @@
+body {
+  /* background-color: #4281A4; */
+  /* background-color: #283149; */
+  font-family: 'Montserrat', sans-serif;
+
+  /* font-family: 'Charmonman', cursive; */
+  text-align: center;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    /* font-family: "Montserrat"; */
+    font-weight: bolder;
+}
+
+
+.big-heading {
+  color: #fff;
+  font-family: 'Charmonman';
+  /* font-weight: bolder; */
+}
+
+.section-heading {
+  font-family: 'Charmonman';
+  font-size: 2rem;
+  text-align: left;
+  /* padding: 0; */
+  /* font-weight: bolder; */
+}
+
+.dice-container {
+  width: 30%;
+  margin: auto auto 0;
+  text-align: center;
+  padding: 2rem;
+}
+/* Containers */
+.container-fluid {
+  padding: 3% 2%;
+}
+
+/* .container {
+  width: 20%;
+  margin: auto auto 0;
+  text-align: center;
+} */
+
+
+/* dice  */
+.dice {
+  text-align: center;
+  display: inline-block;
+  position: relative;
+  right: 1rem;
+  left: 1rem;
+  width: 25%;
+}
+
+img {
+  width: 100%;
+}
+
+.roll-button {
+  margin: 5%;
+  width: 50%;
+  padding: 5px;
+}
+
+.roll-button:hover {
+  background-color: #fff;
+}
+
+
+/* Sections */
+
+.colored-section {
+  background-color: #4281A4;
+  color: #fff;
+  padding: 0 0 30px;
+  /* padding: 3$; */
+}
+
+.white-section {
+  background-color: #fff;
+  padding:0 0 30px;
+  /* padding: 3% 2%; */
+}
+
+/* Title Section / Navbar */
+.navbar {
+  /* margin: auto auto 4.5rem auto; */
+  padding: 0 0 1rem 0;
+}
+
+.navbar-brand {
+  font-family: "Charmonman";
+  font-size: 2.5rem;
+  font-weight: 300;
+}
+
+.nav-item {
+  padding: 0 18px;
+}
+
+.nav-link {
+  font-size: 1.2rem;
+  font-weight: 100;
+}
+
+#title .container-fluid {
+  padding: 2% 2% 0;
+  text-align: left;
+
+}
+
+
+/* Game pieces */
+
+.game-piece {
+  /* outline: 0; */
+  outline-style: none;
+  border: none;
+
+  /* border: 3px solid #000; */
+  /* font-size: 5rem;
+  font-family: 'Arvo', cursive;
+  line-height: 2;
+  font-weight: 900;
+  color: #DA0463;
+  text-shadow: 3px 0 #DBEDF3; */
+  border-radius: 100%;
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  /* text-align: center; */
+  margin: 8px;
+  /* background-color: white; */
+}
+
+/* Gets rid of ugly border around game pieces when pressed */
+.game-piece:focus {
+  outline: none;
+}
+
+/* Game board table stuff */
+.td, .tr {
+  border: none;
+  border-width: 0;
+  border-spacing: 0;
+  padding: 0;
+  z-index: -5;
+}
+
+.table {
+  margin: auto;
+  width: 70%;
+  border: none;
+  border-style: none;
+  border-spacing: 0;
+  border-collapse: collapse;
+  z-index: -5;
+
+}
+
+/* background of a space on the game board */
+.background {
+  /* background-color: red; */
+  border-radius: 20%;
+  width: 100%;
+  border-spacing: 0;
+  z-index: 0;
+}
+
+.possible-move {
+  /* background-color: red; */
+  position: absolute;
+  top: 10%;
+  left: 10%;
+  width: 80%;
+  margin: auto;
+  border-radius: 20%;
+  opacity: 0.5;
+  /*width: 100%;
+  border-spacing: 0; */
+  z-index: 1;
+}
+
+.piece-image {
+  position: absolute;
+  top: 25%;
+  left: 25%;
+  width: 45%;
+  margin: auto;
+  /* height: 50%; */
+  z-index: 2;
+}
+.tcell {
+  position: relative;
+  top: 0;
+  left: 0;
+  margin: 0;
+  padding: 0;
+  z-index: 0;
+}
+
+
+/* Player label . status styles (your turn, etc) */
+
+
+.player-label {
+  color: #fff;
+  /* background-color: none; */
+  font-weight: normal;
+  font-size: 2rem;
+}
+
+.player-label-active {
+  color: #4281A4;
+  background-color: #fff;
+  font-weight: bolder;
+}
+
+.player-status {
+  /* color: #fff; */
+  font-weight: normal;
+}
+
+.player-status-active {
+
+  color: #fff;
+  font-weight: bolder;
+}
+
+.player-second-status {
+  /* color: #fff; */
+  padding-top: 3%;
+  color: #ffcbcb;
+  font-weight: normal;
+}
+
+.player-winner-status {
+  color: #ffcbcb;
+  font-weight: bolder;
+}
+
+/* Game piece styles */
+.player1piece {
+  background-color: #D24BB6;
+  /* opacity: 1.0; */
+
+}
+
+
+.player1piece-pressed {
+  background-color: #fe346e;
+}
+
+.player1piece-board {
+  background-color: #CDB5D2;
+}
+
+.player1piece-home {
+  background-color: #D24BB6;
+  border: solid;
+  border-width: 2%;
+  border-color: #9CD14D;
+  /* border-color: #f0a500 */
+}
+
+.player2piece {
+  background-color: #9CD14D;
+}
+
+.player2piece-pressed {
+  background-color: #1eb2a6;
+}
+
+.player2piece-board {
+  background-color: #BCD1BB;
+}
+
+.player2piece-home {
+  background-color: #9CD14D;
+  border: solid;
+  border-width: 4%;
+  border-color: #D24BB6;
+  /* border-color: #91300a; */
+}
+
+/* Rules section */
+
+.rules-image {
+  width: 60%;
+}
+
+.rules-text {
+  margin: 5%;
+  font-size: 1.2rem;
+  text-align: left;
+}
+
+.rules-li {
+  margin-bottom: 3%;
+  font-size: 1.2rem;
+  text-align: left;
+}
+
+.rules-play {
+  font-weight: lighter;
+  font-size: 1.2rem;
+}
+
+
+
+/* Play section */
+.game-format {
+  padding: 2% 3%;
+}
+
+
+.gameboard {
+  width: 45%;
+
+}
+
+
+
+
+.restart-area {
+  margin: 4rem;
+}
+
+/* Rules section */
+#rules {
+  background-color: #F7FFF7;
+  color: #5e6472;
+  padding-bottom: 3%;
+}
+
+/* Footer section */
+
+footer {
+  font-family: 'Indie Flower', cursive;
+  color: #fff;
+  font-size: 1rem;
+  /* padding: 3%; */
+}
