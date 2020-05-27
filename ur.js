@@ -71,7 +71,7 @@ var game;
 
 $(".roll-button").click(function(event) {
   //Roll dice button event handler
-  console.log("In dice roll button event handler");
+  // console.log("In dice roll button event handler");
 
   game.rollDice(this);
 
@@ -142,7 +142,7 @@ class GameBoardSpace {
 
   constructor(gameSpaceNumber) {
 
-    console.log("GameBoardSpace constructor")
+    // console.log("GameBoardSpace constructor")
     this.spaceNumber = gameSpaceNumber;
 
     //Mark if this is a rosette piece or not
@@ -295,7 +295,7 @@ class GamePiece {
 
   constructor(selector, player) {
 
-    console.log("GamePiece constructor");
+    // console.log("GamePiece constructor");
     this.player = player; //player number who owns this piece
     this.gameBoardSpaceIndex = pieceStartIndex;
     this.pieceIsHome = false;
@@ -365,7 +365,7 @@ class GamePiece {
     //Find where piece currently is located in its 14 space journey off the board
     var locationIndex = this.getLocationIndex();
 
-    console.log("in determineIfCanMove: locationIndex is " + locationIndex + " for game board space number " + this.gameBoardSpaceIndex);
+    // console.log("in determineIfCanMove: locationIndex is " + locationIndex + " for game board space number " + this.gameBoardSpaceIndex);
 
     var numberSpacesUntilHome = game.calculateNumberOfSpacesUntilHome(this.gameBoardSpaceIndex);
     if (numberSpacesUntilHome !== -1 && numberOfSpaces > numberSpacesUntilHome) {
@@ -532,7 +532,7 @@ class GamePiece {
 class UrGame {
 
   constructor(gameType) {
-    console.log("Ur Constructor");
+    // console.log("Ur Constructor");
 
     this.gamePlayType = gameType; // 0 = 2 players side-by-side; 1 = against computer (future)
     this.diceRoll = 0;
@@ -544,6 +544,12 @@ class UrGame {
 
     //create the game board
     this.gameBoard = [];
+
+
+    //Game pieces for each player
+    this.player1GamePieceArray = [];
+    this.player2GamePieceArray = [];
+
 
     for (var i = 0; i < maxSpacesOnBoard; i++) {
       this.gameBoard.push(new GameBoardSpace(i));
@@ -567,12 +573,6 @@ class UrGame {
 
   } //constructor
 
-  // gameBoard property - holds game board space information
-  gameBoard = [];
-
-  //Game pieces for each player
-  player1GamePieceArray = [];
-  player2GamePieceArray = [];
 
 
   decideFirstPlayer() {
@@ -860,7 +860,7 @@ class UrGame {
   showPossibleMoves() {
     // Show on the game board the number of possible moves for the current player based on the dice roll
     // Returns number of possible moves
-    console.log("In showPossibleMoves for player " + this.currentPlayer);
+    // console.log("In showPossibleMoves for player " + this.currentPlayer);
     // console.log("Dice roll is " + this.diceRoll);
     var i = 0;
     var pieceArray = game.getGamePieceArray();
@@ -909,7 +909,7 @@ class UrGame {
   manageGamePiece(targetId) {
     //** NOT USED ***
     // console.log("In manageGamePiece:", event);
-    console.log("In manageGamePiece:", targetId);
+    // console.log("In manageGamePiece:", targetId);
     //Get the associated array piece for the button that was pressed.
     var pieceArray = [];
     if (this.currentPlayer === 1) {
@@ -919,7 +919,7 @@ class UrGame {
     }
 
     var index = parseInt(targetId.slice(-2), 10);
-    console.log("In manageGamePiece; index is " + index);
+    // console.log("In manageGamePiece; index is " + index);
 
     // pieceArray[index - 1].processPieceClick();
 
