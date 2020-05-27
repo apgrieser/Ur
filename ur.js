@@ -567,6 +567,9 @@ class UrGame {
     //Initialize pieces - they should only have the default class attached to them
     this.initializePieces();
 
+    //Initialize roll button to be enabled.
+    this.enableRollButton();
+
     //Initialize secondary status
     this.updatePlayerSecondStatus(player1, "");
     this.updatePlayerSecondStatus(player2, "");
