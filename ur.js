@@ -10,10 +10,15 @@ const numberOfPieces = 7;
 const maxSpacesOnBoard = 22; //There are 22 spaces TOTAL on the board (8 spaces are shared between players); 2 are the home positions
 const player1 = 1;
 const player2 = 2;
+const aiPlayer = player2; //Have the computer be the second player
 
 // Constants used for game play modes
 const twoPlayerGame = 0;
 const onePlayerGameAgainstAI = 1;
+
+const twoPlayerGameHeader = "Player 1";
+const onePlayerGameAgainstAIHeader = "Computer";
+const headerSelector = "l2";
 
 // MAY NOT NEED THIS
 // const player1SelectedClassName = "player1piece-pressed";
@@ -24,17 +29,17 @@ const noPlayerOnSpace = 0;
 
 // Status messages
 const yourTurnMsg = "Your Turn - Roll";
-const waitMsg = "wait..."
-const rolledMsg = "You rolled:  "
-const rolledZero = "You rolled 0 - no pieces can move"
-const noMoves = "You have no moves - other player goes"
-const goAgain = "You go again!"
-const playerWins = "You Win!!"
-const loserMsg = "Better Luck Next Time"
-const sentStart = "You were sent back to start"
-const wentHome = "You made it home!"
-const msgDelay = 1500;  //milliseconds to delay before moving on from some messages NOT USING?
-const blinkInterval = 500; //milliseconds ot blink winner message
+const waitMsg = "wait...";
+const rolledMsg = "You rolled:  ";
+const rolledZero = "You rolled 0 - no pieces can move";
+const noMoves = "You have no moves - other player goes";
+const goAgain = "You go again!";
+const playerWins = "You Win!!";
+const loserMsg = "Better Luck Next Time";
+const sentStart = "You were sent back to start";
+const wentHome = "You made it home!";
+const msgDelay = 1500; //milliseconds to delay before moving on from some messages NOT USING?
+const blinkInterval = 100; //milliseconds ot blink winner message
 
 // Indeces where rosettes are located on the game board
 const rosetteIndeces = [3, 7, 11, 17, 19];
@@ -82,7 +87,7 @@ $(".restart-button").click(function(event) {
   //Restart button - start a new game
 
   //Ick.  Is there a way to make a nicer dialog?
-  if (confirm ("Are you sure you want to restart?")) {
+  if (confirm("Are you sure you want to restart?")) {
     //Remove winner display class stuff from the player status.
     game.removeWinnerBigDeal();
     startGame();
@@ -125,15 +130,88 @@ $(".tcell").click(function(event) {
 }); //table cell click event
 
 
-function enableRollButton () {
+function enableRollButton() {
   $(".roll-button").prop("disabled", false);
 } //enableRollButton
 
-function disableRollButton () {
+function disableRollButton() {
   $(".roll-button").prop("disabled", true);
 
 } //disableRollButton
 
+
+// **********  UrAI class *************************
+class UrAI {
+  // Class to determine the next move for an AI player
+
+  constructor() {
+
+    // this.gameBoardArray = []; //Do I need to initialize arrays??
+    this.gameBoardArray = [];
+    this.possibleMovesArray = [];
+    this.nextGameSpaceToMoveTo = -1;
+
+    // Populate the possibleMovesArray with the space numbers that can be moved to
+    // var movesAvailable = 0;
+    // for (var i = 0; i < maxSpacesOnBoard; i++) {
+    //   if (this.gameBoardArray[i].canBeMovedTo) {
+    //     movesAvailable += 1;
+    //     this.possibleMovesArray.push(this.gameBoardArray[i].spaceNumber);
+    //   }
+    // } //for
+    //
+    // if (movesAvailable > 0) {
+    //    //For now, just randomly choose a space to move to.
+    //    this.nextGameSpaceToMoveTo = this.possibleMovesArray[this.gameBoardArray[getRandomInt(this.possibleMovesArray.length)].spaceNumber];
+    // } else {
+    //   //No moves available; do...what?
+    // }
+
+  } //constructor
+
+  setGameBoardArray(boardArray = []) {
+    console.log(boardArray);
+    this.gameBoardArray = boardArray;
+    // Populate the possibleMovesArray with the space numbers that can be moved to
+    // var movesAvailable = 0;
+    for (var i = 0; i < boardArray.length; i++) {
+      if (boardArray[i].canBeMovedTo) {
+        // movesAvailable += 1;
+        this.possibleMovesArray.push(boardArray[i].spaceNumber);
+      }
+    } //for
+
+    if (this.possibleMovesArray.length > 0) {
+      //For now, just randomly choose a space to move to.
+      // this.determineNextMoveSpaceNumber();
+      this.nextGameSpaceToMoveTo = this.possibleMovesArray[this.getRandomInt(this.possibleMovesArray.length)];
+
+
+    } else {
+      //No moves available; do...what?
+    }
+  }
+
+  //Return an integer between 0 and max (inclusive)
+  getRandomInt(max) {
+    // Return a random integer between 0 and max
+    var randomNumber = Math.floor(Math.random() * (max));
+    // console.log("In getRandomInt: " + randomNumber);
+    return randomNumber;
+
+  } //getRandomInt
+
+  determineNextMoveSpaceNumber() {
+    var nextGameBoardSpaceNumber = 0;
+
+    //Smarts go here...
+    this.nextGameSpaceToMoveTo = this.possibleMovesArray[this.gameBoardArray[getRandomInt(this.possibleMovesArray.length)]];
+
+    return nextGameBoardSpaceNumber;
+
+  }
+
+} //class UrAI
 
 // **********  GameBoardSpace class ***************
 
@@ -154,7 +232,7 @@ class GameBoardSpace {
 
     this.canBeMovedTo = false; //True if a place the current player can move to
     this.potentialPieceNumber = pieceStartIndex; //Number of piece that *could* move here (calculated during determine if can move there)
-    this.pieceNumber = pieceStartIndex;  //Number of piece on this space (array position in its pieceArray)
+    this.pieceNumber = pieceStartIndex; //Number of piece on this space (array position in its pieceArray) for the player number on the space
     this.playerOnSpace = noPlayerOnSpace; //if the piece is occupied, this is the number of the player on the piece
 
     //Hide play related images from the space
@@ -177,7 +255,7 @@ class GameBoardSpace {
 
   clearGameSpace() {
     //Reset this game space.  If there is a piece on this space, send it back home.
-
+    console.log("In clearGameSpace before hideGamePlayImages; playerOnSpace is " + this.playerOnSpace);
     this.hideGamePlayImages();
 
     if (this.playerOnSpace !== noPlayerOnSpace) {
@@ -209,6 +287,26 @@ class GameBoardSpace {
       var pieceArray = game.getGamePieceArray();
       // console.log("Calling movePieceToSpace with: " + this.spaceNumber);
 
+      //If it's the ai's turn, have it blink the piece's current location.
+      if (game.gamePlayType === onePlayerGameAgainstAI && game.currentPlayer === aiPlayer) {
+        console.log(this);
+        console.log("In manageGameBoardSpaceClick: spaceNumber is " + this.spaceNumber + ", pieceNumber is " + this.pieceNumber + ", potentialPieceNumber is " + this.potentialPieceNumber + ", gameSpaceIndex is " + this.spaceNumber);
+        if (this.potentialPieceNumber === pieceStartIndex) {
+          //The piece to be moved is in the start area - blink that piece
+          //HOW?
+        } else {
+          //Piece is on the board.  Blink it before moving it.
+          //NOTE:  TIMING MEANS WE DON'T SEE THIS??
+          //THIS DOESN'T WORK
+          // var startingSpace = pieceArray[this.potentialPieceNumber].gameBoardSpaceIndex;
+          // if (startingSpace !== pieceStartIndex) {
+          //   //Don't blink if it is going off the board?
+          //   this.blinkPieceOnGameBoardSpace(this.playerOnSpace);
+          // }
+        }
+
+      } //if ai player's turn
+
       //Get the number of the piece that can move here...and move it!
       pieceArray[this.potentialPieceNumber].movePieceToSpace(this.spaceNumber);
 
@@ -217,14 +315,41 @@ class GameBoardSpace {
 
       if (!game.gameOver) {
 
+        var playerToBlink = game.currentPlayer;
+        if (playerToBlink === aiPlayer && game.gamePlayType === onePlayerGameAgainstAI) {
+          //Blink the piece if the ai just moved
+          console.log("In manageGameBoardSpaceClick:  blinking piece for player " + playerToBlink);
+          console.log(game.gameBoard[this.spaceNumber]);
+          game.gameBoard[this.spaceNumber].blinkPieceOnGameBoardSpace(aiPlayer);
+        }
+
         //Switch to the next player, unless the player moved onto a rosette space.
         if (this.isRosette) {
           game.updatePlayerStatus(game.currentPlayer, goAgain);
+
+          //If the ai lands on a rosette, queue up its second turn
+          //TIMING ISSUES HERE?  1 millisecond not enough with the blinking?
+          if (game.currentPlayer === aiPlayer && game.gamePlayType === onePlayerGameAgainstAI) {
+            //AI goes again
+            console.log("ai landed on rosette - going again...");
+            setTimeout(function() {
+              game.rollDice();
+            }, 1000);
+          }
+
           //Need to turn the roll button back on
           game.enableRollButton();
 
         } else {
+          //Not on a rosette.  Move is over so switch to the other player.
           game.switchToOtherPlayer();
+
+          //New for playing against computer
+          //If we are now the playing against the computer and it's the computer's turn, have the computer auto roll
+          if (game.currentPlayer === aiPlayer && game.gamePlayType === onePlayerGameAgainstAI) {
+            //The computer is the second player - auto roll dice need to be rolled again...
+            game.rollDice();
+          }
 
         }
       }
@@ -285,7 +410,17 @@ class GameBoardSpace {
     $(this.generateHtmlIdForPlayerPiece(playerNumber)).show();
   } //showPlayerGamePiece
 
-} //gameBoardSpace
+
+  blinkPieceOnGameBoardSpace(playerNumber) {
+    var pieceSelector = this.generateHtmlIdForPlayerPiece(playerNumber);
+    console.log("In blinkPieceOnGameBoardSpace for player " + playerNumber);
+    $(pieceSelector).fadeOut(blinkInterval).fadeIn(blinkInterval).fadeOut(blinkInterval).fadeIn(blinkInterval);
+
+  }
+
+} //gameBoardSpace class
+
+
 
 
 // **********  GamePiece class ***************
@@ -299,7 +434,7 @@ class GamePiece {
     this.player = player; //player number who owns this piece
     this.gameBoardSpaceIndex = pieceStartIndex;
     this.pieceIsHome = false;
-    this.onRosette = false; //is piece on a rosette or not
+    // this.onRosette = false; //is piece on a rosette or not
     this.canMove = true; //True if it is okay to move this piece the number the dice rolled
     this.jquerySelector = selector; //Text of jquery selector to use to retrieve the piece from DOM using jquery
     // this.screenButton = $(selector).get(0); //This is the actual button object from DOM (NEEDED?)
@@ -447,12 +582,19 @@ class GamePiece {
     if (this.gameBoardSpaceIndex !== pieceStartIndex) {
 
       //If we are already on the board, we need to hide this game piece since no longer on starting space.
-      game.gameBoard[this.gameBoardSpaceIndex].hidePlayerGamePiece(game.currentPlayer);
-      // game.hideGamePieceOnBoard(game.currentPlayer, this.gameBoardSpaceIndex);
+      console.log("In movePieceToSpace for player " + this.player);
+      game.gameBoard[this.gameBoardSpaceIndex].hidePlayerGamePiece(this.player);
+      //Not sure what is going on here, but sometime in play computer mode, not clearing out right indicators??
+      //Trying to see if this works?
+      // game.gameBoard[this.gameBoardSpaceIndex].hidePlayerGamePiece(player1);
+      // game.gameBoard[this.gameBoardSpaceIndex].hidePlayerGamePiece(player2);
+
+
       //Reset the old space properties
       game.gameBoard[this.gameBoardSpaceIndex].playerOnSpace = noPlayerOnSpace;
       game.gameBoard[this.gameBoardSpaceIndex].canBeMovedTo = false;
-      game.gameBoard[this.gameBoardSpaceIndex].potentialPieceNumber = pieceStartIndex
+      game.gameBoard[this.gameBoardSpaceIndex].potentialPieceNumber = pieceStartIndex;
+      game.gameBoard[this.gameBoardSpaceIndex].pieceNumber = pieceStartIndex;
 
     } else {
       //This piece is leaving the start area; change appearance
@@ -469,7 +611,7 @@ class GamePiece {
       //Take piece off the board by changing appearance of start area piece and resetting appropriate properties
       $(this.jquerySelector).removeClass(game.getPlayerOnBoardClassName(this.player));
       $(this.jquerySelector).addClass(game.getPlayerHomeClassName(this.player));
-      game.gameBoard[this.gameBoardSpaceIndex].hidePlayerGamePiece(game.currentPlayer);
+      game.gameBoard[this.gameBoardSpaceIndex].hidePlayerGamePiece(this.player);
       game.updatePlayerSecondStatus(this.player, wentHome);
       // setTimeout(function() {console.log("waiting...");}, msgDelay);
 
@@ -485,10 +627,9 @@ class GamePiece {
 
       //If there is another player on the space, send them home!
       if (game.gameBoard[gameBoardSpaceIndex].playerOnSpace === game.getOtherPlayerNumber()) {
-        //Get the jquery selector number of the piece that is going off the board.
 
         game.gameBoard[gameBoardSpaceIndex].clearGameSpace();
-        // this.gameBoardSpaceIndex = pieceStartIndex;
+
       }
 
       // remember this new space index on the game board
@@ -505,25 +646,22 @@ class GamePiece {
       var gamePieceArray = game.getGamePieceArray();
       game.gameBoard[this.gameBoardSpaceIndex].pieceNumber = gamePieceArray.indexOf(this);
 
-      // Remember if we are on a rosette or not
-      if (game.gameBoard[this.gameBoardSpaceIndex].isRosette) {
-        this.onRosette = true;
-      } else {
-        this.onRosette = false;
-      }
+      // Remember if we are on a rosette or not DON'T THINK I NEED THIS
+      // if (game.gameBoard[this.gameBoardSpaceIndex].isRosette) {
+      //   this.onRosette = true;
+      // } else {
+      //   this.onRosette = false;
+      // }
 
-      game.gameBoard[this.gameBoardSpaceIndex].showPlayerGamePiece(game.currentPlayer);
+      game.gameBoard[this.gameBoardSpaceIndex].showPlayerGamePiece(this.player);
+
+
 
     } //game piece still on board
 
   } //movePieceToSpace
 
 
-  //NOT USING
-  // processPieceClick(index) {
-  //   //Not sure I want to do anything if they click on a piece??
-  //   console.log("In processPieceClick for player " + this.player + ", id " + this.jquerySelector);
-  // }
 
 } //GamePiece
 
@@ -535,6 +673,7 @@ class UrGame {
     // console.log("Ur Constructor");
 
     this.gamePlayType = gameType; // 0 = 2 players side-by-side; 1 = against computer (future)
+    this.setGamePlayerHeaders(gameType);
     this.diceRoll = 0;
     this.currentPlayer = this.decideFirstPlayer();
     this.displayTurn();
@@ -576,7 +715,11 @@ class UrGame {
 
   } //constructor
 
-
+  changeGameType(gameTypeNumber) {
+    //Change to the game play mode to the input game type
+    // (two player mode or player against AI mode)
+    this.gamePlayType = gameTypeNumber;
+  }
 
   decideFirstPlayer() {
     //Method to decide who goes firstPlayer
@@ -602,6 +745,7 @@ class UrGame {
       $("#l2").removeClass("player-label-active");
 
     } else {
+
       this.updatePlayerStatus(2, yourTurnMsg);
       $("#player2-status").addClass("player-status-active");
       $("#l2").addClass("player-label-active");
@@ -740,13 +884,6 @@ class UrGame {
 
   } //removeWinnerBigDeal
 
-  // blinkWinner() {
-  //   //This method is woken up by an interval after someone wins; interval is cleared when a new game is started
-  //   var jQuerySelector = $("#player" + this.winner + "-status")
-  //   $(jQuerySelector).fadeOut(blinkInterval).fadeIn(blinkInterval).fadeOut(blinkInterval).fadeIn(blinkInterval).fadeOut(blinkInterval).fadeIn(blinkInterval);
-  //   // $(jQuerySelector).fadeIn(blinkInterval);
-  // }
-
 
   //Return an integer between 0 and max (inclusive)
   getRandomInt(max) {
@@ -774,7 +911,7 @@ class UrGame {
   } //rollDie
 
 
-  setDiceToZero () {
+  setDiceToZero() {
     //Set dice to all zero for initial case at start of a game.
     $(".img1").attr("src", "images/die0.png");
     $(".img2").attr("src", "images/die0.png");
@@ -804,14 +941,21 @@ class UrGame {
 
       //Save dice roll value
       this.diceRoll = diceSum;
+      console.log("In rollDice for player " + this.currentPlayer + "; roll is " + this.diceRoll);
 
       if (this.diceRoll < 1) {
         // console.log("in roll dice - rolled 0");
-        // this.updatePlayerStatus(this.currentPlayer, rolledZero);
         this.updatePlayerSecondStatus(this.currentPlayer, rolledZero);
         this.switchToOtherPlayer();
 
+        //playing against computer and the human rolled a zero - we need to have the computer auto roll
+        if (this.gamePlayType === onePlayerGameAgainstAI && (this.gamePlayType) && this.currentPlayer === aiPlayer) {
+          game.rollDice();
+        }
+
       } else {
+        //Rolled bigger than 0
+
         this.updatePlayerStatus(this.currentPlayer, rolledMsg + diceSum);
         var numberOfMoves = this.showPossibleMoves();
 
@@ -819,16 +963,20 @@ class UrGame {
           //No moves for this player - switch to other user
           this.updatePlayerSecondStatus(this.currentPlayer, noMoves);
           this.switchToOtherPlayer();
+          if (game.gamePlayType === onePlayerGameAgainstAI && game.currentPlayer === aiPlayer) {
+            //Automatically roll for the ai
+            game.rollDice();
+          }
         }
       }
     } //game not over
   } //rollDice method
 
-  enableRollButton () {
+  enableRollButton() {
     $(".roll-button").prop("disabled", false);
   }
 
-  disableRollButton () {
+  disableRollButton() {
     $(".roll-button").prop("disabled", true);
 
   }
@@ -891,17 +1039,44 @@ class UrGame {
             //Set flag so we don't check a start piece again
             offPieceAlreadySelected = true;
           } //start piece not yet selected (but it is now)
-        }//piece is in the start area
+        } //piece is in the start area
       } // piece is not home
     } //for
 
-    //Light up board spaces that can be moved to
-    var movesAvailable = 0;
-    for (i = 0; i < maxSpacesOnBoard; i++) {
-      if (this.gameBoard[i].canBeMovedTo) {
-        movesAvailable += 1;
-        this.gameBoard[i].showPossibleMoveIndicator();
+    if (this.gamePlayType === twoPlayerGame || (this.gamePlayType !== twoPlayerGame && this.currentPlayer === player1)) {
+      //Two player side-by-side game - light up possible spaces for the move decision
+      //Light up board spaces that can be moved to
+      var movesAvailable = 0;
+      for (i = 0; i < maxSpacesOnBoard; i++) {
+        if (this.gameBoard[i].canBeMovedTo) {
+          movesAvailable += 1;
+          this.gameBoard[i].showPossibleMoveIndicator();
+        }
       }
+    } else {
+      // Playing against AI (who is player 2)
+
+      // Have the computer decide the next move and move there
+      console.log("ai's turn");
+
+      //Create an ai object to determine where the AI should move next
+      var ai = new UrAI();
+
+      //For some reason can't do this in the constructor?
+      //The next method uses the gameBoard object to determine where to move to next.
+      //This method also sets the gameboard space index of where the next move is
+      ai.setGameBoardArray(game.gameBoard);
+
+      console.log("In showPossibleMoves: AI return space is: " + ai.nextGameSpaceToMoveTo);
+      // Move to the space indicated by the ai
+      if (ai.nextGameSpaceToMoveTo > 0) {
+        game.gameBoard[ai.nextGameSpaceToMoveTo].manageGameBoardSpaceClick();
+      } else {
+        //No moves for ai
+        movesAvailable = 0;
+        // game.updatePlayerSecondStatus(aiPlayer, noMoves);
+      }
+
     }
 
     return movesAvailable;
@@ -937,7 +1112,7 @@ class UrGame {
 
   } //getOtherPlayerNumber
 
-  getPlayerStartClassName (player) {
+  getPlayerStartClassName(player) {
     //Return name of the CSS class to use when a player piece is in the start position (need?)
     if (player === player1) {
       return player1StartClassName;
@@ -947,7 +1122,7 @@ class UrGame {
 
   } //getPlayerStartClassName
 
-  getPlayerOnBoardClassName (player) {
+  getPlayerOnBoardClassName(player) {
     //Return name of the CSS class to use when a player piece is on the board
     if (player === player1) {
       return player1OnBoardClassName;
@@ -957,7 +1132,7 @@ class UrGame {
 
   } //getPlayerOnBoardClassName
 
-  getPlayerHomeClassName (player) {
+  getPlayerHomeClassName(player) {
     //Return name of the CSS class to use when a player piece comes home
     if (player === player1) {
       return player1HomeClassName;
@@ -971,8 +1146,8 @@ class UrGame {
     var jQueryName1 = "";
     var jQueryName2 = "";
     for (var i = 0; i < numberOfPieces; i++) {
-      jQueryName1 = "#p1" + (i+1);
-      jQueryName2 = "#p2" + (i+1);
+      jQueryName1 = "#p1" + (i + 1);
+      jQueryName2 = "#p2" + (i + 1);
       $(jQueryName1).removeClass(this.getPlayerOnBoardClassName(player1));
       $(jQueryName1).removeClass(this.getPlayerHomeClassName(player1));
       $(jQueryName2).removeClass(this.getPlayerOnBoardClassName(player2));
@@ -980,19 +1155,25 @@ class UrGame {
     }
   } //initializePieces
 
+  setGamePlayerHeaders(gameType) {
+    if (gameType === twoPlayerGame) {
+      // this.setDisplaysForTwoPlayerGame();
+      $("#" + headerSelector).html(twoPlayerGameHeader);
+    } else {
+      // this.setDisplaysForOnePlayerAgainstAIGame();
+      $("#" + headerSelector).html(onePlayerGameAgainstAIHeader);
+    }
+  } //setGamePlayerHeaders
 
 } // UrGame
-
 
 
 function startGame() {
   // console.log("In startGame");
 
-
   //Initialize a game (TODO - This will need to change when can choose to play against computer)
-  game = new UrGame(twoPlayerGame);
-
-
+  // game = new UrGame(twoPlayerGame);
+  game = new UrGame(onePlayerGameAgainstAI);
 
 } //startGame
 
