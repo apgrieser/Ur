@@ -17,7 +17,7 @@ const twoPlayerGame = 0;
 const onePlayerGameAgainstAI = 1;
 const twoPlayerGameRemote = 2; //FUTURE
 
-const twoPlayerGameHeader = "Player 1";
+const twoPlayerGameHeader = "Player 2";
 const onePlayerGameAgainstAIHeader = "Computer";
 const headerSelector = "l2";
 
