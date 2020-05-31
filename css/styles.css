@@ -28,7 +28,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .dice-container {
-  width: 30%;
+  width: 50%;
   margin: auto auto 0;
   text-align: center;
   padding: 2rem;
@@ -52,7 +52,7 @@ h1, h2, h3, h4, h5, h6 {
   position: relative;
   right: 1rem;
   left: 1rem;
-  width: 25%;
+  width: 40%;
 }
 
 img {
@@ -75,14 +75,14 @@ img {
 .colored-section {
   background-color: #4281A4;
   color: #fff;
-  padding: 0 0 30px;
-  /* padding: 3$; */
+  /* padding: 0 0 20px; */
+  padding: .5% 1%;
 }
 
 .white-section {
   background-color: #fff;
-  padding:0 0 30px;
-  /* padding: 3% 2%; */
+  /* padding:0 0 20px; */
+  padding: .5% 2%;
 }
 
 /* Title Section / Navbar */
@@ -107,7 +107,7 @@ img {
 }
 
 #title .container-fluid {
-  padding: 2% 2% 0;
+  padding: 2% 1% 0;
   text-align: left;
 
 }
@@ -152,7 +152,7 @@ img {
 
 .table {
   margin: auto;
-  width: 70%;
+  width: 50%;
   border: none;
   border-style: none;
   border-spacing: 0;
@@ -261,7 +261,7 @@ img {
 .player1piece-home {
   background-color: #D24BB6;
   border: solid;
-  border-width: 2%;
+  /* border-width: 2%; */
   border-color: #9CD14D;
   /* border-color: #f0a500 */
 }
@@ -281,7 +281,7 @@ img {
 .player2piece-home {
   background-color: #9CD14D;
   border: solid;
-  border-width: 4%;
+  /* border-width: 4%; */
   border-color: #D24BB6;
   /* border-color: #91300a; */
 }
@@ -326,7 +326,7 @@ img {
 
 
 .restart-area {
-  margin: 4rem;
+  margin: 3rem;
 }
 
 /* Rules section */
