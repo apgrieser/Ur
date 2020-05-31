@@ -15,6 +15,7 @@ const aiPlayer = player2; //Have the computer be the second player
 // Constants used for game play modes
 const twoPlayerGame = 0;
 const onePlayerGameAgainstAI = 1;
+const twoPlayerGameRemote = 2; //FUTURE
 
 const twoPlayerGameHeader = "Player 1";
 const onePlayerGameAgainstAIHeader = "Computer";
@@ -94,6 +95,34 @@ $(".restart-button").click(function(event) {
   }
 
 }); //event handler for restart button
+
+$("#setAI").click(function(ecvent) {
+  // console.log("Setting to play computer pressed");
+  if (confirm("Are you sure you want to play the computer?  This will restart the game.")) {
+    //Remove winner display class stuff from the player status.
+    game.removeWinnerBigDeal();
+    startGame(onePlayerGameAgainstAI);
+  }
+});
+
+$("#setHumanLocal").click(function(ecvent) {
+  // console.log("Setting to play a human local pressed");
+  if (confirm("Are you sure you want to play with another person?  This will restart the game.")) {
+    //Remove winner display class stuff from the player status.
+    game.removeWinnerBigDeal();
+    startGame(twoPlayerGame);
+  }
+});
+
+$("#setHumanRemote").click(function(ecvent) {
+  console.log("FUTURE FEATURE Setting to play a human remote pressed");
+  if (confirm("Are you sure you want to play with another person?  This will restart the game.")) {
+    //Remove winner display class stuff from the player status.
+    //UNCOMMENT NEXT TWO STATEMENTS WHEN READY TO IMPLEMENT
+    // game.removeWinnerBigDeal();
+    // startGame(twoPlayerGameRemote);
+  }
+});
 
 //Game piece event handler (wakes when a game piece is clicked)
 //DON'T NEED?
@@ -1168,14 +1197,14 @@ class UrGame {
 } // UrGame
 
 
-function startGame() {
+function startGame(playType) {
   // console.log("In startGame");
 
   //Initialize a game (TODO - This will need to change when can choose to play against computer)
   // game = new UrGame(twoPlayerGame);
-  game = new UrGame(onePlayerGameAgainstAI);
+  game = new UrGame(playType);
 
 } //startGame
 
 //Get the ball rolling...
-startGame();
+startGame(onePlayerGameAgainstAI);
