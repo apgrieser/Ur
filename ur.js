@@ -4,6 +4,7 @@
 //
 
 // Constant definitions
+const version = "0.2";
 
 const numberOfDice = 4;
 const numberOfPieces = 7;
@@ -1207,4 +1208,6 @@ function startGame(playType) {
 } //startGame
 
 //Get the ball rolling...
+console.log("Royal Game of Ur version " + version);
+
 startGame(onePlayerGameAgainstAI);
