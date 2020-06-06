@@ -189,7 +189,6 @@ function enableRollButton() {
 
 function disableRollButton() {
   $(".roll-button").prop("disabled", true);
-
 } //disableRollButton
 
 
@@ -254,14 +253,12 @@ class UrAI {
     //REMOVE THIS ONCE SERVER IS WORKING!!
     // this.nextGameSpaceToMoveTo = this.possibleMovesArray[this.getRandomInt(this.possibleMovesArray.length)];
 
-    //TEMP - TRYING TO FIGURE OUT HOW TO CALL SERVER CODE TO FIGURE THIS OUT!
-    // var jsonGameBoardArray = {};
-
     // Things to pass to the server:  the difficulty level and the game board array
     var serverObject = {
       difficulty: this.difficultyLevel,
       gameBoardArray: this.gameBoardArray
     }
+
     console.log("Before server call; serverObject is: ", serverObject);
     // console.log("Before JSON convert: ", this.gameBoardArray);
     // var jsonGameBoardArray = JSON.stringify(this.gameBoardArray);
@@ -318,6 +315,7 @@ class UrAI {
   //   this.nextGameSpaceToMoveTo = nextMove;
   //
   // }
+
 } //class UrAI
 
 // **********  GameBoardSpace class ***************
@@ -1165,7 +1163,7 @@ class UrGame {
       // Playing against AI (who is player 2)
 
       // Have the computer decide the next move and move there
-      console.log("ai's turn");
+      // console.log("ai's turn");
 
       //Create an ai object to determine where the AI should move next
       var ai = new UrAI(this.gameDifficultyMode);
@@ -1174,16 +1172,6 @@ class UrGame {
       //The next method uses the gameBoard object to determine where to move to next.
       //This method also sets the gameboard space index of where the next move is
       ai.determineNextMoveSpaceNumber(game.gameBoard);
-
-      // console.log("In showPossibleMoves: AI return space is: " + ai.nextGameSpaceToMoveTo);
-      // // Move to the space indicated by the ai
-      // if (ai.nextGameSpaceToMoveTo > 0) {
-      //   game.gameBoard[ai.nextGameSpaceToMoveTo].manageGameBoardSpaceClick();
-      // } else {
-      //   //No moves for ai
-      //   movesAvailable = 0;
-      //   // game.updatePlayerSecondStatus(aiPlayer, noMoves);
-      // }
 
     } //ai playing
 

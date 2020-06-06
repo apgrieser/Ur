@@ -126,7 +126,7 @@ function findNextSpaceMediumDifficulty(gameBoardArray, possibleMovesArray) {
   //Priorities:
   //One:  If a space is occupied by the other player, or is a rosette
   //Two:  Piece goes home
-  //Three: Piece in "safe" zone (past shared spaces
+  //Three: Piece in "safe" zone (past shared spaces)  or put a new piece on the board (right priority?)
   //Four: Piece closest to home
   var priorityOneArray = [];
   var priorityTwoArray = [];
@@ -135,6 +135,7 @@ function findNextSpaceMediumDifficulty(gameBoardArray, possibleMovesArray) {
 
   //Go through the possibleMovesArray and prioritize based on where the piece would go
   for (var i = 0; i < possibleMovesArray.length; i++) {
+    console.log("In loop: ", possibleMovesArray[i], gameBoardArray[possibleMovesArray[i]].potentialPieceNumber);
     if (gameBoardArray[possibleMovesArray[i]].isRosette || gameBoardArray[possibleMovesArray[i]].playerOnSpace) {
       //This space is a rosette or the other player is on the space - this is a priority one move
       priorityOneArray.push(possibleMovesArray[i]);
@@ -143,8 +144,8 @@ function findNextSpaceMediumDifficulty(gameBoardArray, possibleMovesArray) {
       //Piece would go home
       priorityTwoArray.push(possibleMovesArray[i]);
 
-    } else if (player2IndexMap.includes(possibleMovesArray[i], (player2IndexMap.length - 2))) {
-      //Piece would be in the "safe" zone
+    } else if (player2IndexMap.includes(possibleMovesArray[i], (player2IndexMap.length - 2)) || gameBoardArray[possibleMovesArray[i]].potentialPieceNumber === -1) {
+      //Piece would be in the "safe" zone OR it is a piece currently not on the board
       priorityThreeArray.push(possibleMovesArray[i]);
 
     } else {
@@ -210,6 +211,6 @@ function findNextSpaceHardDifficulty(gameBoardArray, possibleMovesArray) {
 //   console.log("Response: ", res);
 // });
 
-app.listen(port, function(){
+app.listen(process.env.PORT || port, function(){
   console.log("Server started on port " + port);
 });
