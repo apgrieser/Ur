@@ -4,7 +4,7 @@
 //
 
 // Constant definitions
-const version = "0.2";
+const version = "0.4";
 
 const numberOfDice = 4;
 const numberOfPieces = 7;
@@ -17,6 +17,11 @@ const aiPlayer = player2; //Have the computer be the second player
 const twoPlayerGame = 0;
 const onePlayerGameAgainstAI = 1;
 const twoPlayerGameRemote = 2; //FUTURE
+
+// Constants to specify the difficulty level for the AI to choose the next move
+const easyDifficultyLevel = 0;
+const mediumDifficultyLevel = 1;
+const hardDifficultyLevel = 2;
 
 const twoPlayerGameHeader = "Player 2";
 const onePlayerGameAgainstAIHeader = "Computer";
@@ -92,17 +97,35 @@ $(".restart-button").click(function(event) {
   if (confirm("Are you sure you want to restart?")) {
     //Remove winner display class stuff from the player status.
     game.removeWinnerBigDeal();
-    startGame();
+    startGame(game.gamePlayType, game.gameDifficultyMode);
   }
 
 }); //event handler for restart button
 
-$("#setAI").click(function(ecvent) {
-  // console.log("Setting to play computer pressed");
-  if (confirm("Are you sure you want to play the computer?  This will restart the game.")) {
+$("#setAIE").click(function(event) {
+  // console.log("Setting to play computer (easy) pressed");
+  if (confirm("Are you sure you want to play the computer (easy difficulty mode)?  This will restart the game.")) {
     //Remove winner display class stuff from the player status.
     game.removeWinnerBigDeal();
-    startGame(onePlayerGameAgainstAI);
+    startGame(onePlayerGameAgainstAI, easyDifficultyLevel);
+  }
+});
+
+$("#setAIM").click(function(event) {
+  console.log("Setting to play computer (medium) pressed");
+  if (confirm("Are you sure you want to play the computer (medium difficulty mode)?  This will restart the game.")) {
+    //Remove winner display class stuff from the player status.
+    game.removeWinnerBigDeal();
+    startGame(onePlayerGameAgainstAI, mediumDifficultyLevel);
+  }
+});
+
+$("#setAIH").click(function(event) {
+  // console.log("Setting to play computer (hard) pressed");
+  if (confirm("Are you sure you want to play the computer (hardest difficulty mode)?  This will restart the game.")) {
+    //Remove winner display class stuff from the player status.
+    game.removeWinnerBigDeal();
+    startGame(onePlayerGameAgainstAI, hardDifficultyLevel);
   }
 });
 
@@ -115,8 +138,8 @@ $("#setHumanLocal").click(function(ecvent) {
   }
 });
 
-$("#setHumanRemote").click(function(ecvent) {
-  console.log("FUTURE FEATURE Setting to play a human remote pressed");
+$("#setHumanRemote").click(function(event) {
+  // console.log("FUTURE FEATURE Setting to play a human remote pressed");
   if (confirm("Are you sure you want to play with another person?  This will restart the game.")) {
     //Remove winner display class stuff from the player status.
     //UNCOMMENT NEXT TWO STATEMENTS WHEN READY TO IMPLEMENT
@@ -174,73 +197,127 @@ function disableRollButton() {
 class UrAI {
   // Class to determine the next move for an AI player
 
-  constructor() {
+  constructor(difficulty) {
 
-    // this.gameBoardArray = []; //Do I need to initialize arrays??
+    this.difficultyLevel = difficulty;
     this.gameBoardArray = [];
-    this.possibleMovesArray = [];
+    // this.possibleMovesArray = [];
     this.nextGameSpaceToMoveTo = -1;
-
-    // Populate the possibleMovesArray with the space numbers that can be moved to
-    // var movesAvailable = 0;
-    // for (var i = 0; i < maxSpacesOnBoard; i++) {
-    //   if (this.gameBoardArray[i].canBeMovedTo) {
-    //     movesAvailable += 1;
-    //     this.possibleMovesArray.push(this.gameBoardArray[i].spaceNumber);
-    //   }
-    // } //for
-    //
-    // if (movesAvailable > 0) {
-    //    //For now, just randomly choose a space to move to.
-    //    this.nextGameSpaceToMoveTo = this.possibleMovesArray[this.gameBoardArray[getRandomInt(this.possibleMovesArray.length)].spaceNumber];
-    // } else {
-    //   //No moves available; do...what?
-    // }
 
   } //constructor
 
-  setGameBoardArray(boardArray = []) {
-    console.log(boardArray);
-    this.gameBoardArray = boardArray;
-    // Populate the possibleMovesArray with the space numbers that can be moved to
-    // var movesAvailable = 0;
-    for (var i = 0; i < boardArray.length; i++) {
-      if (boardArray[i].canBeMovedTo) {
-        // movesAvailable += 1;
-        this.possibleMovesArray.push(boardArray[i].spaceNumber);
-      }
-    } //for
-
-    if (this.possibleMovesArray.length > 0) {
-      //For now, just randomly choose a space to move to.
-      // this.determineNextMoveSpaceNumber();
-      this.nextGameSpaceToMoveTo = this.possibleMovesArray[this.getRandomInt(this.possibleMovesArray.length)];
-
-
-    } else {
-      //No moves available; do...what?
-    }
-  }
+  // setGameBoardArray(boardArray = []) {
+  //   // console.log(boardArray);
+  //   this.gameBoardArray = boardArray;
+  //   // Populate the possibleMovesArray with the space numbers that can be moved to
+  //   // var movesAvailable = 0;
+  //
+  //   //DON'T NEED TO DO THIS ONCE THE SERVER IS WORKING (only need to call determineNextMoveSpaceNumber)
+  //   for (var i = 0; i < boardArray.length; i++) {
+  //     if (boardArray[i].canBeMovedTo) {
+  //       // movesAvailable += 1;
+  //       this.possibleMovesArray.push(boardArray[i].spaceNumber);
+  //     }
+  //   } //for
+  //
+  //   if (this.possibleMovesArray.length > 0) {
+  //     //For now, just randomly choose a space to move to.
+  //     // this.determineNextMoveSpaceNumber();
+  //     // this.nextGameSpaceToMoveTo = this.possibleMovesArray[this.getRandomInt(this.possibleMovesArray.length)];
+  //     this.determineNextMoveSpaceNumber();
+  //
+  //   } else {
+  //     //No moves available; do...what?
+  //   }
+  // }
 
   //Return an integer between 0 and max (inclusive)
-  getRandomInt(max) {
-    // Return a random integer between 0 and max
-    var randomNumber = Math.floor(Math.random() * (max));
-    // console.log("In getRandomInt: " + randomNumber);
-    return randomNumber;
+  //DON'T NEED THIS ONCE SERVER IS WORKING
+  // getRandomInt(max) {
+  //   // Return a random integer between 0 and max
+  //   var randomNumber = Math.floor(Math.random() * (max));
+  //   // console.log("In getRandomInt: " + randomNumber);
+  //   return randomNumber;
+  //
+  // } //getRandomInt
 
-  } //getRandomInt
+  determineNextMoveSpaceNumber(boardArray = []) {
+    //Given a game board array, use the Ur server to figure out the next move for the computer
 
-  determineNextMoveSpaceNumber() {
-    var nextGameBoardSpaceNumber = 0;
+    this.gameBoardArray = boardArray;
 
-    //Smarts go here...
-    this.nextGameSpaceToMoveTo = this.possibleMovesArray[this.gameBoardArray[getRandomInt(this.possibleMovesArray.length)]];
+    var nextMove = -1;
 
-    return nextGameBoardSpaceNumber;
+    var urlText = "/nextMove";
 
-  }
+    //Smarts go here...(random for now)
+    //REMOVE THIS ONCE SERVER IS WORKING!!
+    // this.nextGameSpaceToMoveTo = this.possibleMovesArray[this.getRandomInt(this.possibleMovesArray.length)];
 
+    //TEMP - TRYING TO FIGURE OUT HOW TO CALL SERVER CODE TO FIGURE THIS OUT!
+    // var jsonGameBoardArray = {};
+
+    // Things to pass to the server:  the difficulty level and the game board array
+    var serverObject = {
+      difficulty: this.difficultyLevel,
+      gameBoardArray: this.gameBoardArray
+    }
+    console.log("Before server call; serverObject is: ", serverObject);
+    // console.log("Before JSON convert: ", this.gameBoardArray);
+    // var jsonGameBoardArray = JSON.stringify(this.gameBoardArray);
+    // console.log("After JSON convert: ", jsonGameBoardArray);
+    // console.log("serverObject: ", serverObject);
+    // console.log("JSON serverObject: ", JSON.stringify(serverObject));
+
+    // console.log("Doing .ajax thing");
+    // Use ajax to pass the request to the server
+    // Response will come to the .done indicator
+    // var self = this;
+    var jqxhr = $.ajax({
+        type: "POST",
+        url: urlText,
+        contentType: "application/json; charset=utf-8",
+        // context: self,
+        // contents: jsonGameBoardArray,
+        data: JSON.stringify(serverObject),
+        dataType: "json",
+        // async: false,
+        // beforeSend: function(xhr) {
+        //   console.log("before send in ajax with url " + this.url, this.data)
+        // },
+
+      })
+      .done(function(data) {
+        console.log("Back from ajax in done ", data);
+        console.log("In done function: ", data.nextMove);
+        // nextMove = data.nextMove;
+        //Tell the game the next move for the computer
+        game.receiveAiNextMove(data.nextMove);
+
+        // console.log("Back", jqxhr);
+        // console.log("Response text ");
+
+        // this.nextGameSpaceToMoveTo = nextMove;
+
+      })
+      // .then(function(data) {
+      //   console.log("Back from ajax in then ", data);
+      // })
+      .fail(function(xhr) {
+        console.log("Error was returned: " + xhr.status + " " + xhr.statusText);
+      });
+
+    // console.log("Back - jqxhr is: ", jqxhr);
+
+    // this.nextGameSpaceToMoveTo = nextMove;
+
+  } //determineNextMoveSpaceNumber
+
+
+  // setNextMove(nextMove) {
+  //   this.nextGameSpaceToMoveTo = nextMove;
+  //
+  // }
 } //class UrAI
 
 // **********  GameBoardSpace class ***************
@@ -285,7 +362,7 @@ class GameBoardSpace {
 
   clearGameSpace() {
     //Reset this game space.  If there is a piece on this space, send it back home.
-    console.log("In clearGameSpace before hideGamePlayImages; playerOnSpace is " + this.playerOnSpace);
+    // console.log("In clearGameSpace before hideGamePlayImages; playerOnSpace is " + this.playerOnSpace);
     this.hideGamePlayImages();
 
     if (this.playerOnSpace !== noPlayerOnSpace) {
@@ -319,8 +396,8 @@ class GameBoardSpace {
 
       //If it's the ai's turn, have it blink the piece's current location.
       if (game.gamePlayType === onePlayerGameAgainstAI && game.currentPlayer === aiPlayer) {
-        console.log(this);
-        console.log("In manageGameBoardSpaceClick: spaceNumber is " + this.spaceNumber + ", pieceNumber is " + this.pieceNumber + ", potentialPieceNumber is " + this.potentialPieceNumber + ", gameSpaceIndex is " + this.spaceNumber);
+        // console.log(this);
+        // console.log("In manageGameBoardSpaceClick: spaceNumber is " + this.spaceNumber + ", pieceNumber is " + this.pieceNumber + ", potentialPieceNumber is " + this.potentialPieceNumber + ", gameSpaceIndex is " + this.spaceNumber);
         if (this.potentialPieceNumber === pieceStartIndex) {
           //The piece to be moved is in the start area - blink that piece
           //HOW?
@@ -348,8 +425,8 @@ class GameBoardSpace {
         var playerToBlink = game.currentPlayer;
         if (playerToBlink === aiPlayer && game.gamePlayType === onePlayerGameAgainstAI) {
           //Blink the piece if the ai just moved
-          console.log("In manageGameBoardSpaceClick:  blinking piece for player " + playerToBlink);
-          console.log(game.gameBoard[this.spaceNumber]);
+          // console.log("In manageGameBoardSpaceClick:  blinking piece for player " + playerToBlink);
+          // console.log(game.gameBoard[this.spaceNumber]);
           game.gameBoard[this.spaceNumber].blinkPieceOnGameBoardSpace(aiPlayer);
         }
 
@@ -361,7 +438,7 @@ class GameBoardSpace {
           //TIMING ISSUES HERE?  1 millisecond not enough with the blinking?
           if (game.currentPlayer === aiPlayer && game.gamePlayType === onePlayerGameAgainstAI) {
             //AI goes again
-            console.log("ai landed on rosette - going again...");
+            // console.log("ai landed on rosette - going again...");
             setTimeout(function() {
               game.rollDice();
             }, 1000);
@@ -443,7 +520,7 @@ class GameBoardSpace {
 
   blinkPieceOnGameBoardSpace(playerNumber) {
     var pieceSelector = this.generateHtmlIdForPlayerPiece(playerNumber);
-    console.log("In blinkPieceOnGameBoardSpace for player " + playerNumber);
+    // console.log("In blinkPieceOnGameBoardSpace for player " + playerNumber);
     $(pieceSelector).fadeOut(blinkInterval).fadeIn(blinkInterval).fadeOut(blinkInterval).fadeIn(blinkInterval);
 
   }
@@ -612,7 +689,7 @@ class GamePiece {
     if (this.gameBoardSpaceIndex !== pieceStartIndex) {
 
       //If we are already on the board, we need to hide this game piece since no longer on starting space.
-      console.log("In movePieceToSpace for player " + this.player);
+      // console.log("In movePieceToSpace for player " + this.player);
       game.gameBoard[this.gameBoardSpaceIndex].hidePlayerGamePiece(this.player);
       //Not sure what is going on here, but sometime in play computer mode, not clearing out right indicators??
       //Trying to see if this works?
@@ -699,10 +776,11 @@ class GamePiece {
 // Game of Ur game board class
 class UrGame {
 
-  constructor(gameType) {
+  constructor(gameType, difficultyLevel) {
     // console.log("Ur Constructor");
 
-    this.gamePlayType = gameType; // 0 = 2 players side-by-side; 1 = against computer (future)
+    this.gamePlayType = gameType; // 0 = 2 players side-by-side; 1 = against computer
+    this.gameDifficultyMode = difficultyLevel;
     this.setGamePlayerHeaders(gameType);
     this.diceRoll = 0;
     this.currentPlayer = this.decideFirstPlayer();
@@ -971,7 +1049,7 @@ class UrGame {
 
       //Save dice roll value
       this.diceRoll = diceSum;
-      console.log("In rollDice for player " + this.currentPlayer + "; roll is " + this.diceRoll);
+      // console.log("In rollDice for player " + this.currentPlayer + "; roll is " + this.diceRoll);
 
       if (this.diceRoll < 1) {
         // console.log("in roll dice - rolled 0");
@@ -1090,28 +1168,46 @@ class UrGame {
       console.log("ai's turn");
 
       //Create an ai object to determine where the AI should move next
-      var ai = new UrAI();
+      var ai = new UrAI(this.gameDifficultyMode);
 
       //For some reason can't do this in the constructor?
       //The next method uses the gameBoard object to determine where to move to next.
       //This method also sets the gameboard space index of where the next move is
-      ai.setGameBoardArray(game.gameBoard);
+      ai.determineNextMoveSpaceNumber(game.gameBoard);
 
-      console.log("In showPossibleMoves: AI return space is: " + ai.nextGameSpaceToMoveTo);
-      // Move to the space indicated by the ai
-      if (ai.nextGameSpaceToMoveTo > 0) {
-        game.gameBoard[ai.nextGameSpaceToMoveTo].manageGameBoardSpaceClick();
-      } else {
-        //No moves for ai
-        movesAvailable = 0;
-        // game.updatePlayerSecondStatus(aiPlayer, noMoves);
-      }
+      // console.log("In showPossibleMoves: AI return space is: " + ai.nextGameSpaceToMoveTo);
+      // // Move to the space indicated by the ai
+      // if (ai.nextGameSpaceToMoveTo > 0) {
+      //   game.gameBoard[ai.nextGameSpaceToMoveTo].manageGameBoardSpaceClick();
+      // } else {
+      //   //No moves for ai
+      //   movesAvailable = 0;
+      //   // game.updatePlayerSecondStatus(aiPlayer, noMoves);
+      // }
 
-    }
+    } //ai playing
 
     return movesAvailable;
 
   } //showPossibleMoves method
+
+  receiveAiNextMove(nextMove) {
+    // Called from the UrAI object after the server figures out the next move for the AI.
+
+    if (nextMove > -1) {
+      game.gameBoard[nextMove].manageGameBoardSpaceClick();
+
+    } else {
+      //No moves for ai
+      game.updatePlayerSecondStatus(game.currentPlayer, noMoves);
+      game.switchToOtherPlayer();
+
+      //Automatically roll for the ai
+      game.rollDice();
+
+    }
+
+  } //receiveAiNextMove
 
   //Method called when a game piece is clicked
   manageGamePiece(targetId) {
@@ -1198,16 +1294,16 @@ class UrGame {
 } // UrGame
 
 
-function startGame(playType) {
+function startGame(playType, difficultyLevel) {
   // console.log("In startGame");
 
   //Initialize a game (TODO - This will need to change when can choose to play against computer)
   // game = new UrGame(twoPlayerGame);
-  game = new UrGame(playType);
+  game = new UrGame(playType, difficultyLevel);
 
 } //startGame
 
 //Get the ball rolling...
 console.log("Royal Game of Ur version " + version);
 
-startGame(onePlayerGameAgainstAI);
+startGame(onePlayerGameAgainstAI, mediumDifficultyLevel);
