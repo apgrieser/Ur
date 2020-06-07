@@ -1,6 +1,6 @@
 //Main node.js server file
 
-// Constants to specify the difficulty level for the AI to choose the next move
+// Constants to specify the difficulty level for the AI to choose the next move for computer
 const easyDifficultyLevel = 0;
 const mediumDifficultyLevel = 1;
 const hardDifficultyLevel = 2;
