@@ -144,7 +144,7 @@ function findNextSpaceMediumDifficulty(gameBoardArray, possibleMovesArray) {
       //Piece would go home
       priorityTwoArray.push(possibleMovesArray[i]);
 
-    } else if (player2IndexMap.includes(possibleMovesArray[i], (player2IndexMap.length - 2)) || gameBoardArray[possibleMovesArray[i]].potentialPieceNumber === -1) {
+    } else if (player2IndexMap.includes(possibleMovesArray[i], (player2IndexMap.length - 2)) || gameBoardArray[possibleMovesArray[i]].potentialPreviousSpaceNumber === -1) {
       //Piece would be in the "safe" zone OR it is a piece currently not on the board
       priorityThreeArray.push(possibleMovesArray[i]);
 

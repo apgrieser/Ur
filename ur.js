@@ -337,6 +337,7 @@ class GameBoardSpace {
 
     this.canBeMovedTo = false; //True if a place the current player can move to
     this.potentialPieceNumber = pieceStartIndex; //Number of piece that *could* move here (calculated during determine if can move there)
+    this.potentialPreviousSpaceNumber = pieceStartIndex; //Game space number of potential piece; -1 means it is still in start area
     this.pieceNumber = pieceStartIndex; //Number of piece on this space (array position in its pieceArray) for the player number on the space
     this.playerOnSpace = noPlayerOnSpace; //if the piece is occupied, this is the number of the player on the piece
 
@@ -655,6 +656,9 @@ class GamePiece {
       var gamePieceArray = game.getGamePieceArray();
       game.gameBoard[nextMoveGameBoardIndex].potentialPieceNumber = gamePieceArray.indexOf(this);
 
+      //Remember the gameboard space number of potential piece to be moved (needed by server next move calculations)
+      game.gameBoard[nextMoveGameBoardIndex].potentialPreviousSpaceNumber = gamePieceArray[gamePieceArray.indexOf(this)].gameBoardSpaceIndex;
+
     }
 
     return this.canMove;
@@ -699,6 +703,7 @@ class GamePiece {
       game.gameBoard[this.gameBoardSpaceIndex].playerOnSpace = noPlayerOnSpace;
       game.gameBoard[this.gameBoardSpaceIndex].canBeMovedTo = false;
       game.gameBoard[this.gameBoardSpaceIndex].potentialPieceNumber = pieceStartIndex;
+      game.gameBoard[this.gameBoardSpaceIndex].potentialPreviousSpaceNumber = pieceStartIndex;
       game.gameBoard[this.gameBoardSpaceIndex].pieceNumber = pieceStartIndex;
 
     } else {
@@ -746,6 +751,7 @@ class GamePiece {
       //Reset other game board space properties
       game.gameBoard[this.gameBoardSpaceIndex].canBeMovedTo = false;
       game.gameBoard[this.gameBoardSpaceIndex].potentialPieceNumber = pieceStartIndex;
+      game.gameBoard[this.gameBoardSpaceIndex].potentialPreviousSpaceNumber = pieceStartIndex;
 
       //Remember which piece this is in the game piece array
       var gamePieceArray = game.getGamePieceArray();
