@@ -2,7 +2,7 @@
   "name": "ur-app",
   "version": "1.0.0",
   "description": "Royal Game of Ur",
-  "main": "UrApp.js",
+  "main": "urApp.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
