@@ -105,6 +105,11 @@ $(".restart-button").click(function(event) {
 $("#setAIE").click(function(event) {
   // console.log("Setting to play computer (easy) pressed");
   if (confirm("Are you sure you want to play the computer (easy difficulty mode)?  This will restart the game.")) {
+    $("#setAIE").addClass("active");
+    $("#setAIM").removeClass("active");
+    $("#setAIH").removeClass("active");
+    $("#setHumanLocal").removeClass("active");
+
     //Remove winner display class stuff from the player status.
     game.removeWinnerBigDeal();
     startGame(onePlayerGameAgainstAI, easyDifficultyLevel);
@@ -114,6 +119,10 @@ $("#setAIE").click(function(event) {
 $("#setAIM").click(function(event) {
   console.log("Setting to play computer (medium) pressed");
   if (confirm("Are you sure you want to play the computer (medium difficulty mode)?  This will restart the game.")) {
+    $("#setAIM").addClass("active");
+    $("#setAIE").removeClass("active");
+    $("#setAIH").removeClass("active");
+    $("#setHumanLocal").removeClass("active");
     //Remove winner display class stuff from the player status.
     game.removeWinnerBigDeal();
     startGame(onePlayerGameAgainstAI, mediumDifficultyLevel);
@@ -123,6 +132,10 @@ $("#setAIM").click(function(event) {
 $("#setAIH").click(function(event) {
   // console.log("Setting to play computer (hard) pressed");
   if (confirm("Are you sure you want to play the computer (hardest difficulty mode)?  This will restart the game.")) {
+    $("#setAIH").addClass("active");
+    $("#setAIM").removeClass("active");
+    $("#setAIE").removeClass("active");
+    $("#setHumanLocal").removeClass("active");
     //Remove winner display class stuff from the player status.
     game.removeWinnerBigDeal();
     startGame(onePlayerGameAgainstAI, hardDifficultyLevel);
@@ -132,6 +145,10 @@ $("#setAIH").click(function(event) {
 $("#setHumanLocal").click(function(ecvent) {
   // console.log("Setting to play a human local pressed");
   if (confirm("Are you sure you want to play with another person?  This will restart the game.")) {
+    $("#setHumanLocal").addClass("active");
+    $("#setAIE").removeClass("active");
+    $("#setAIM").removeClass("active");
+    $("#setAIH").removeClass("active");
     //Remove winner display class stuff from the player status.
     game.removeWinnerBigDeal();
     startGame(twoPlayerGame);
