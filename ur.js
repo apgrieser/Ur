@@ -273,6 +273,8 @@ class UrAI {
     // Things to pass to the server:  the difficulty level and the game board array
     var serverObject = {
       difficulty: this.difficultyLevel,
+      player1PiecesHome: game.getNumberPiecesHomeCounter(player1),
+      player2PiecesHome: game.getNumberPiecesHomeCounter(player2),
       gameBoardArray: this.gameBoardArray
     }
 
@@ -715,7 +717,6 @@ class GamePiece {
       // game.gameBoard[this.gameBoardSpaceIndex].hidePlayerGamePiece(player1);
       // game.gameBoard[this.gameBoardSpaceIndex].hidePlayerGamePiece(player2);
 
-
       //Reset the old space properties
       game.gameBoard[this.gameBoardSpaceIndex].playerOnSpace = noPlayerOnSpace;
       game.gameBoard[this.gameBoardSpaceIndex].canBeMovedTo = false;
@@ -774,25 +775,17 @@ class GamePiece {
       var gamePieceArray = game.getGamePieceArray();
       game.gameBoard[this.gameBoardSpaceIndex].pieceNumber = gamePieceArray.indexOf(this);
 
-      // Remember if we are on a rosette or not DON'T THINK I NEED THIS
-      // if (game.gameBoard[this.gameBoardSpaceIndex].isRosette) {
-      //   this.onRosette = true;
-      // } else {
-      //   this.onRosette = false;
-      // }
-
       game.gameBoard[this.gameBoardSpaceIndex].showPlayerGamePiece(this.player);
-
-
 
     } //game piece still on board
 
   } //movePieceToSpace
 
 
+} //GamePiece class
 
-} //GamePiece
 
+// *********************  UrGame class **********
 
 // Game of Ur game board class
 class UrGame {
@@ -869,9 +862,14 @@ class UrGame {
       $("#player1-status").html(yourTurnMsg);
       $("#player1-status").addClass("player-status-active");
       $("#l1").addClass("player-label-active");
+      //Clear out second player message if player is a human
+      if (this.gamePlayType === twoPlayerGame) {
       this.updatePlayerStatus(2, waitMsg);
+      }
       $("#player2-status").removeClass("player-status-active");
       $("#l2").removeClass("player-label-active");
+
+
 
     } else {
 
@@ -901,8 +899,8 @@ class UrGame {
 
   } //switchToOtherPlayer
 
-  getNumberPiecesHomeCounter() {
-    if (this.currentPlayer === player1) {
+  getNumberPiecesHomeCounter(player) {
+    if (player === player1) {
       return this.numberPlayer1PiecesHome;
     } else {
       return this.numberPlayer2PiecesHome;
@@ -923,7 +921,7 @@ class UrGame {
   allPiecesAreHome() {
     //Return TRUE if all pieces are home for the current player; otherwise return false
     var gamePieceArray = this.getGamePieceArray();
-    var numberPiecesHome = this.getNumberPiecesHomeCounter();
+    var numberPiecesHome = this.getNumberPiecesHomeCounter(this.currentPlayer);
 
     if (numberPiecesHome >= gamePieceArray.length) {
       return true;
@@ -1061,6 +1059,10 @@ class UrGame {
       //Clear out any secondary status
       this.updatePlayerSecondStatus(player1, "");
       this.updatePlayerSecondStatus(player2, "");
+      //If it's not a two player game, this is a good time to clear out the computer's status
+      if (this.gamePlayType !== twoPlayerGame) {
+        this.updatePlayerStatus(aiPlayer, waitMsg);
+      }
 
       var diceSum = 0;
 
@@ -1173,7 +1175,7 @@ class UrGame {
     } //for
 
     if (this.gamePlayType === twoPlayerGame || (this.gamePlayType !== twoPlayerGame && this.currentPlayer === player1)) {
-      //Two player side-by-side game - light up possible spaces for the move decision
+      //Two player side-by-side game or its the human player's turn - light up possible spaces for the move decision
       //Light up board spaces that can be moved to
       var movesAvailable = 0;
       for (i = 0; i < maxSpacesOnBoard; i++) {
@@ -1241,8 +1243,10 @@ class UrGame {
   } //manageGamePiece
 
   getOtherPlayerNumber() {
+    //Get the other player number
     if (this.currentPlayer === player1) {
       return player2;
+
     } else {
       return player1;
     }
