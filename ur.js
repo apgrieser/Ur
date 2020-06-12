@@ -4,7 +4,7 @@
 //
 
 // Constant definitions
-const version = "0.4";
+const version = "0.5";
 
 const numberOfDice = 4;
 const numberOfPieces = 7;
