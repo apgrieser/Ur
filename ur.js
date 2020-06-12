@@ -39,6 +39,7 @@ const yourTurnMsg = "Your Turn - Roll";
 const waitMsg = "wait...";
 const rolledMsg = "You rolled:  ";
 const rolledZero = "You rolled 0 - no pieces can move";
+const rolledZeroAgainstAi = "You rolled - 0; when computer turn ends, go again";
 const noMoves = "You have no moves - other player goes";
 const goAgain = "You go again!";
 const playerWins = "You Win!!";
@@ -864,7 +865,7 @@ class UrGame {
       $("#l1").addClass("player-label-active");
       //Clear out second player message if player is a human
       if (this.gamePlayType === twoPlayerGame) {
-      this.updatePlayerStatus(2, waitMsg);
+        this.updatePlayerStatus(2, waitMsg);
       }
       $("#player2-status").removeClass("player-status-active");
       $("#l2").removeClass("player-label-active");
@@ -1057,8 +1058,12 @@ class UrGame {
       this.disableRollButton();
 
       //Clear out any secondary status
-      this.updatePlayerSecondStatus(player1, "");
+      // Leave the human player status up when the computer goes (because sometimes it's hard to tell what's going on)
+      if (this.gamePlayType !== twoPlayerGame && this.currentPlayer !== aiPlayer) {
+        this.updatePlayerSecondStatus(player1, "");
+      }
       this.updatePlayerSecondStatus(player2, "");
+
       //If it's not a two player game, this is a good time to clear out the computer's status
       if (this.gamePlayType !== twoPlayerGame) {
         this.updatePlayerStatus(aiPlayer, waitMsg);
@@ -1076,11 +1081,18 @@ class UrGame {
 
       if (this.diceRoll < 1) {
         // console.log("in roll dice - rolled 0");
-        this.updatePlayerSecondStatus(this.currentPlayer, rolledZero);
+        if (this.gamePlayType !== twoPlayerGame && this.currentPlayer !== aiPlayer) {
+          //Slightly different message sent if you roll a zero and play will switch to the ai
+          this.updatePlayerSecondStatus(this.currentPlayer, rolledZeroAgainstAi);
+
+        } else {
+          this.updatePlayerSecondStatus(this.currentPlayer, rolledZero);
+        }
         this.switchToOtherPlayer();
 
         //playing against computer and the human rolled a zero - we need to have the computer auto roll
         if (this.gamePlayType === onePlayerGameAgainstAI && (this.gamePlayType) && this.currentPlayer === aiPlayer) {
+
           game.rollDice();
         }
 
