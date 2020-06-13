@@ -6,8 +6,8 @@ const mediumDifficultyLevel = 1;
 const hardDifficultyLevel = 2;
 
 // const moveDepth = 3; //number of moves to look ahead for hard difficulty play level
-const numberGameSimulations = 1000;
-const numberTurnsToSimulate = 2;
+const numberGameSimulations = 2000;
+const numberTurnsToSimulate = 1;
 
 const humanPlayer = 1;
 const aiPlayer = 2;
@@ -452,6 +452,12 @@ function findNextSpaceMediumDifficulty(gameBoard, player) {
     return possibleMovesArray[0];
   }
 
+  if (possibleMovesArray.includes(sharedRosetteSpace)) {
+    //If the rosette in the danger zone is a possible move, go there (always a good idea??)!
+    console.log("medium difficulty: moving to shared rosette space");
+    return sharedRosetteSpace;
+  }
+
   // Use correct game board spaces for the player
   if (player === humanPlayer) {
     indexMapToUse = player1IndexMap;
@@ -485,20 +491,36 @@ function findNextSpaceMediumDifficulty(gameBoard, player) {
   if (priorityOneArray.length > 0) {
     //We have a priority one level move
     // console.log("Before call to pickMoveFromPriorityArray with priorityOneArray: ", priorityOneArray);
+    console.log("medium choosing from priority 1 array ", priorityOneArray);
     return pickMoveFromPriorityArray(priorityOneArray);
 
   } else if (priorityTwoArray.length > 0) {
     // console.log("Before call to pickMoveFromPriorityArray with priorityTwoArray: ", priorityTwoArray);
+    console.log("medium choosing from priority 2 array ", priorityTwoArray);
     return pickMoveFromPriorityArray(priorityTwoArray);
 
   } else if (priorityThreeArray.length > 0) {
     // console.log("Before call to pickMoveFromPriorityArray with priorityThreeArray: ", priorityThreeArray);
+    console.log("medium choosing from priority 3 array ", priorityThreeArray);
     return pickMoveFromPriorityArray(priorityThreeArray);
 
   } else if (priorityFourArray.length > 0) {
     //Pick the array item closest to home
     // console.log("Before max pick from priorityFourArray: ", priorityFourArray);
+    //If one of the places that can be moved to will take a piece off the shared rosette, take a different piece
+    console.log("medium choosing from priority 4 array ", priorityFourArray);
+    if (priorityFourArray.length > 1) {
+      console.log("medium priority 4 array > 1");
+    for (var i = 0; i < priorityFourArray.length; i++) {
+      console.log("i = ", i, " index ", priorityFourArray[i], " " , gameBoardArray[priorityFourArray[i]]);
+      if (gameBoardArray[priorityFourArray[i]].potentialPreviousSpaceNumber === sharedRosetteSpace) {
+          console.log("medium - removing the shared rosette from possible move");
+          priorityFourArray.splice(priorityFourArray.indexOf(sharedRosetteSpace), 1);
+        }
+      } //for
+    } //priority four array length > 1
     return Math.max.apply(null, priorityFourArray);
+
 
   } else {
     //Something weird happened if we got here - shouldn't happen
@@ -515,13 +537,10 @@ function pickMoveFromPriorityArray(priorityArray) {
   if (priorityArray.length > 1) {
     //More than one priority move.  Pick one at random.  Unless..
     //If it's a move to the shared rosette - go there!  Otherwise, choose randomly.
-    var goodRosette = priorityArray.includes(sharedRosetteSpace);
+    //var goodRosette = priorityArray.includes(sharedRosetteSpace);
 
-    if (goodRosette) {
-      nextMove = sharedRosetteSpace;
-    } else {
-      nextMove = priorityArray[getRandomInt(priorityArray.length - 1)];
-    }
+    nextMove = priorityArray[getRandomInt(priorityArray.length - 1)];
+
 
 
   } else {
@@ -624,6 +643,153 @@ function findNextSpaceHardDifficulty(gameBoard) {
 
 } //findNextSpaceHardDifficulty
 
+// function findNextSpaceHardDifficultyRecursive(gameBoard, level) {
+//
+//   // Move based on monte carlo simulation results
+//   // Simulate game play m times looking ahead n moves
+//
+//   // We only get here if there is more than one move so don't have to worry about trivial case of one (or no) possible move
+//   // (constants for number of simulations and number of moves is at top of file)
+//
+//   // Initialize
+//   var nextMove = -1;
+//   var simGameResults = [];
+//
+//   for (var i = 0; i < gameBoard.possibleMovesArray.length; i++) {
+//     //Simulate a game for a defined number of moves or if it ends - remember game score at end ...
+//     //Create a new game board to run the simulation based on the input gameboard
+//     // console.log("In findNextSpaceHardDifficulty for possible move " + gameBoard.possibleMovesArray[i]);
+//
+//     var possibleMoveScoreResults = [];
+//
+//     for (var j = 0; j < numberGameSimulations; j++) {
+//       // console.log("In findNextSpaceHardDifficulty simulating game loop, j is " + j);
+//       // Create a game board based on the input game board that we will use in the game simulations
+//       var simGameBoard = new GameBoard(gameBoard.gameBoardArray, gameBoard.humanPlayerPiecesHome, gameBoard.aiPlayerPiecesHome, aiPlayer);
+//       simGameBoard.generatePossibleMovesArray();
+//
+//       //Have the ai make it's ith possible move, that is, determine results if we make this choice of move...
+//       simGameBoard.moveTo(gameBoard.possibleMovesArray[i], aiPlayer);
+//
+//       //Now simulate other moves (or to the end of the game)
+//       var rollAgain = true;
+//       var gameEnded = false;
+//
+//
+//       // Recursively do  moves until reach last level
+//       if (level === 0) {
+//         gameEnded = takeTurn(simGameBoard, humanPlayer);
+//
+//         if (gameEnded) {
+//           // Game is over; no more turn taking
+//           // console.log("In findNextSpaceHardDifficulty: game ended after HUMAN turn in game sim ");
+//           break;
+//
+//         } else {
+//           // Give other player a turn
+//           gameEnded = takeTurn(simGameBoard, aiPlayer);
+//
+//           if (gameEnded) {
+//             //Game is over; no more turn taking
+//             // console.log("In findNextSpaceHardDifficulty: game ended after AI turn in game sim ");
+//             break;
+//           }
+//         }
+//         simGameBoard.setBoardScore();
+//         possibleMoveScoreResults.push(simGameBoard.boardScore);
+//
+//       } // for game simulation loop
+//
+//       //console.log("In findNextSpaceHardDifficulty; move results scores array: ", possibleMoveScoreResults);
+//
+//       // Average up the game board scores for this move path
+//       if (possibleMoveScoreResults.length > 0) {
+//         var avg = 0;
+//         for (m = 0; m < possibleMoveScoreResults.length; m++) {
+//           avg += possibleMoveScoreResults[m];
+//         }
+//         avg = avg / possibleMoveScoreResults.length;
+//       } else {
+//         //There were not possible moves so set average to 0 (?)
+//         avg = 0;
+//       }
+//
+//       //Save the average for this path
+//       simGameResults.push(avg);
+//       console.log("simGameResults: ", simGameResults);
+//       // console.log("In findNextSpaceHardDifficulty; simGameResults array: ", simGameResults);
+//     } // for possible moves
+//
+//     //Return the game space index of the move path that gave us the best (highest) results
+//     // var maxFromSimGameResults = simGameResults.indexOf(Math.max.apply(null, simGameResults));
+//     var nextMove = gameBoard.possibleMovesArray[simGameResults.indexOf(Math.max.apply(null, simGameResults))];
+//     console.log("In findNextSpaceHardDifficulty; possible moves: ", gameBoard.possibleMovesArray);
+//     console.log("In findNextSpaceHardDifficulty; max score: ", Math.max.apply(null, simGameResults), " possible moves array index: ", simGameResults.indexOf(Math.max.apply(null, simGameResults)));
+//     console.log("In findNextSpaceHardDifficulty: returning nextMove: " + nextMove);
+//     return nextMove;
+//
+//   } else {
+//     nextMove = findNextSpaceHardDifficultyRecursive(level - 1);
+//   }
+//
+//   // for (k = 0; k < numberTurnsToSimulate; k++) {
+//   //   // console.log("In findNextSpaceHardDifficulty simulating turns loop, k is " + k);
+//   //   //for this turn, simulate the human player moving and then the ai moving
+//   //   gameEnded = takeTurn(simGameBoard, humanPlayer);
+//   //
+//   //   if (gameEnded) {
+//   //     // Game is over; no more turn taking
+//   //     // console.log("In findNextSpaceHardDifficulty: game ended after HUMAN turn in game sim ");
+//   //     break;
+//   //
+//   //   } else {
+//   //     // Give other player a turn
+//   //     gameEnded = takeTurn(simGameBoard, aiPlayer);
+//   //
+//   //     if (gameEnded) {
+//   //       //Game is over; no more turn taking
+//   //       // console.log("In findNextSpaceHardDifficulty: game ended after AI turn in game sim ");
+//   //       break;
+//   //     }
+//   //   }
+//   //
+//   // } //for (simulate game moves)
+//   //
+//   // // Save the game board score for later comparison
+//   // simGameBoard.setBoardScore();
+//   // possibleMoveScoreResults.push(simGameBoard.boardScore);
+//
+// } // for game simulation loop
+//
+// //console.log("In findNextSpaceHardDifficulty; move results scores array: ", possibleMoveScoreResults);
+//
+// // Average up the game board scores for this move path
+// if (possibleMoveScoreResults.length > 0) {
+//   var avg = 0;
+//   for (m = 0; m < possibleMoveScoreResults.length; m++) {
+//     avg += possibleMoveScoreResults[m];
+//   }
+//   avg = avg / possibleMoveScoreResults.length;
+// } else {
+//   //There were not possible moves so set average to 0 (?)
+//   avg = 0;
+// }
+//
+// //Save the average for this path
+// simGameResults.push(avg);
+// console.log("simGameResults: ", simGameResults);
+// // console.log("In findNextSpaceHardDifficulty; simGameResults array: ", simGameResults);
+// } // for possible moves
+//
+// //Return the game space index of the move path that gave us the best (highest) results
+// // var maxFromSimGameResults = simGameResults.indexOf(Math.max.apply(null, simGameResults));
+// var nextMove = gameBoard.possibleMovesArray[simGameResults.indexOf(Math.max.apply(null, simGameResults))];
+// console.log("In findNextSpaceHardDifficulty; possible moves: ", gameBoard.possibleMovesArray);
+// console.log("In findNextSpaceHardDifficulty; max score: ", Math.max.apply(null, simGameResults), " possible moves array index: ", simGameResults.indexOf(Math.max.apply(null, simGameResults)));
+// console.log("In findNextSpaceHardDifficulty: returning nextMove: " + nextMove);
+// return nextMove;
+//
+// } //findNextSpaceHardDifficulty
 
 function takeTurn(gameBoard, player) {
   //Have the input player take a turn on the input game board
