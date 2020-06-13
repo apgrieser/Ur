@@ -512,10 +512,10 @@ function findNextSpaceMediumDifficulty(gameBoard, player) {
     if (priorityFourArray.length > 1) {
       console.log("medium priority 4 array > 1");
     for (var i = 0; i < priorityFourArray.length; i++) {
-      console.log("i = ", i, " index ", priorityFourArray[i], " " , gameBoardArray[priorityFourArray[i]]);
+      // console.log("i = ", i, " index ", priorityFourArray[i], " " , gameBoardArray[priorityFourArray[i]]);
       if (gameBoardArray[priorityFourArray[i]].potentialPreviousSpaceNumber === sharedRosetteSpace) {
-          console.log("medium - removing the shared rosette from possible move");
           priorityFourArray.splice(priorityFourArray.indexOf(sharedRosetteSpace), 1);
+          console.log("medium - removed the shared rosette from possible move ", priorityFourArray);
         }
       } //for
     } //priority four array length > 1
