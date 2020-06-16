@@ -60,9 +60,9 @@
                 Settings
               </a>
               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a id="setAIE" class="dropdown-item" href="#">Play Computer (easy)</a>
-                        <a id="setAIM" class="dropdown-item active" href="#">Play Computer (medium)</a>
-                        <a id="setAIH" class="dropdown-item" href="#">Play Computer (hard)</a>
+                        <a id="setAIE" class="dropdown-item" href="#">Play Computer (random)</a>
+                        <a id="setAIM" class="dropdown-item active" href="#">Play Computer (heuristic)</a>
+                        <a id="setAIH" class="dropdown-item" href="#">Play Computer (simulations)</a>
                         <a id="setHumanLocal" class="dropdown-item" href="#">Play A Human (local)</a>
 
                         <!-- <a class="dropdown-item disabled" href="#">Play A Human (remote)</a> -->
@@ -349,6 +349,14 @@
             <li class="rules-li">If a player rolls a <strong>zero</strong>, no pieces move and <strong>play passes to the opponent</strong></li>
             <li class="rules-li">If a player has <strong>no possible moves</strong> for the number rolled, <strong>play passes to the opponent</strong></li>
             <li class="rules-li">You must roll the <strong>exact number</strong> to move your piece off the board to its home position</li>
+          </ul>
+          <p class="rules-text"><em><strong>Settings:</strong></em></p>
+          </p>
+          <ul class="rules-text">
+            <li class="rules-li"><em>Play Computer (random):</em>&nbsp;&nbsp;Computer move chosen randomly chosen from the set of possible moves</li>
+            <li class="rules-li"><em>Play Computer (heuristic):</em>&nbsp;&nbsp;Computer move chosen from possible moves using some logic, such as moving to a rosette if available (default)</li>
+            <li class="rules-li"><em>Play Computer (simulations):</em>&nbsp;&nbsp;Computer move chosen from possible moves by simulating possible look ahead moves and choosing the one with the best outcome</li>
+            <li class="rules-li"><em>Play A Human (local):</em>&nbsp;&nbsp;Two humans sitting side by side can play each other</li>
           </ul>
 
         </div>
