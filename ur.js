@@ -278,16 +278,8 @@ class GameBoardSpace {
 
   constructor(gameSpaceNumber) {
 
-    // console.log("GameBoardSpace constructor")
     this.spaceNumber = gameSpaceNumber;
-
-    //Mark if this is a rosette piece or not
-    if (rosetteIndeces.includes(this.spaceNumber)) {
-      this.isRosette = true;
-    } else {
-      this.isRosette = false;
-    }
-
+    this.isRosette = (rosetteIndeces.includes(this.spaceNumber)) ? true : false;
     this.canBeMovedTo = false; //True if a place the current player can move to
     this.potentialPieceNumber = pieceStartIndex; //Number of piece that *could* move here (calculated during determine if can move there)
     this.potentialPreviousSpaceNumber = pieceStartIndex; //Game space number of potential piece; -1 means it is still in start area
@@ -1007,7 +999,7 @@ class UrGame {
       // if (game.currentPlayer === aiPlayer) {
       //   game.rollDice();
       // }
-      
+
     } //no moves found for ai
 
   } //receiveAiNextMove
