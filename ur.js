@@ -11,7 +11,8 @@ const numberOfPieces = 7;
 const maxSpacesOnBoard = 22; //There are 22 spaces TOTAL on the board (8 spaces are shared between players); 2 are the home positions
 const player1 = 1;
 const player2 = 2;
-const aiPlayer = player2; //Have the computer be the second player
+const humanPlayer = player1; //human is the first player
+const aiPlayer = player2; //computer is the second player
 
 // Constants used for game play modes
 const twoPlayerGame = 0;
@@ -339,11 +340,10 @@ class GameBoardSpace {
     //Only do anything if this a space that can be moved to by a player (based on previous processing)
     if (this.canBeMovedTo) {
 
-      //Figure out which piece to move to this space.
+      //Move the correct piece to this space
+      var pieceNumber = this.potentialPieceNumber;
       var pieceArray = game.getGamePieceArray();
-
-      //Get the number of the piece that can move here...and move it!
-      pieceArray[this.potentialPieceNumber].movePieceToSpace(this.spaceNumber);
+      pieceArray[pieceNumber].movePieceToSpace(this.spaceNumber);
 
       //We shouldn't see the game space indicators on the board any more.
       game.hideAllPossibleMoveIndicators();
@@ -463,10 +463,7 @@ class GamePiece {
     this.player = player; //player number who owns this piece
     this.gameBoardSpaceIndex = pieceStartIndex;
     this.pieceIsHome = false;
-    // this.onRosette = false; //is piece on a rosette or not
-    this.canMove = true; //True if it is okay to move this piece the number the dice rolled
     this.jquerySelector = selector; //Text of jquery selector to use to retrieve the piece from DOM using jquery
-    // this.screenButton = $(selector).get(0); //This is the actual button object from DOM (NEEDED?)
 
   } //constructor
 
@@ -479,69 +476,6 @@ class GamePiece {
     game.updatePlayerSecondStatus(this.player, sentStart);
 
   } //sendGamePieceToStart
-
-
-  determineIfCanMove(numberOfSpaces) {
-    //Return true if piece can move the number of spaces else return false
-
-    //Find where piece currently is located in its 14 space journey off the board and where its new
-    //location would be 
-    var indexMap = game.getIndexMap();
-    var positionInPath = (this.gameBoardSpaceIndex === pieceStartIndex) ? pieceStartIndex : indexMap.indexOf(this.gameBoardSpaceIndex);
-    var newPositionInPath = positionInPath + numberOfSpaces;
-
-    if (newPositionInPath >= indexMap.length) {
-      //Can't move - will go off board by greater than exact needed
-      this.canMove = false;
-      return;
-    }
-
-    //Get here if we have a valid move to index.  Find where on the board it would go
-    var newGameSpaceNumber = indexMap[newPositionInPath];
-
-    //Is another piece on this space?
-    if (game.gameBoard[newGameSpaceNumber].playerOnSpace === noPlayerOnSpace) {
-      //space is not occupied - can move there
-      this.canMove = true;
-
-    } else {
-      //There is another piece on the gameBoard
-      if (game.gameBoard[newGameSpaceNumber].playerOnSpace === this.player) {
-        //occupied by one of the same player's pieces - can't move there
-        this.canMove = false;
-        return false;
-
-      } else {
-        // Other player is on the space
-        if (game.gameBoard[newGameSpaceNumber].isRosette) {
-          //The other player piece is there but it's on a rosette - can't move there
-          this.canMove = false;
-          return false;
-
-        } else {
-          //Can move here
-          this.canMove = true;
-
-        }
-      } //other player on space
-    } //space occupied
-
-    if (this.canMove) {
-      //Movable space
-      game.gameBoard[newGameSpaceNumber].canBeMovedTo = true;
-
-      //Remember the array number of this piece in the game board so we can get back to the piece later
-      var gamePieceArray = game.getGamePieceArray();
-      game.gameBoard[newGameSpaceNumber].potentialPieceNumber = gamePieceArray.indexOf(this);
-
-      //Remember the gameboard space number of potential piece to be moved (needed by server next move calculations)
-      game.gameBoard[newGameSpaceNumber].potentialPreviousSpaceNumber = gamePieceArray[gamePieceArray.indexOf(this)].gameBoardSpaceIndex;
-
-    }
-
-    return this.canMove;
-
-  } //determineIfCanMove
 
 
   movePieceToSpace(gameBoardSpaceIndex) {
@@ -870,9 +804,8 @@ class UrGame {
         this.switchToOtherPlayer();
         console.log("In rollDice rolled < 1 -switched to player " + game.currentPlayer);
 
-
         //playing against computer and the human rolled a zero - we need to have the computer auto roll
-        if (this.gamePlayType === onePlayerGameAgainstAI && (this.gamePlayType) && this.currentPlayer === aiPlayer) {
+        if (this.gamePlayType === onePlayerGameAgainstAI && this.currentPlayer === aiPlayer) {
           game.rollDice();
         }
 
@@ -913,47 +846,127 @@ class UrGame {
 
   } //getIndexOfLastPlayerSpaceOnBoard
 
+  determinePossibleMoves(player, diceRoll) {
+
+      // Loop through the board and see if current pieces on the board can move
+      // (keeping track of how many pieces are on the board)
+      var numPiecesOnBoard = 0;
+
+      var indexMapToUse = [];
+      var otherPlayer = 0;
+
+      if (player === humanPlayer) {
+        indexMapToUse = player1IndexMap;
+        otherPlayer = aiPlayer;
+
+      } else {
+        indexMapToUse = player2IndexMap;
+        otherPlayer = humanPlayer;
+      }
+      // console.log("In determinePossibleMoves " + player + ", dice roll " + diceRoll);
+
+      // Initialize potential moves to false;
+      for (var i = 0; i < this.gameBoard.length; i++) {
+        this.gameBoard[i].canBeMovedTo = false;
+      }
+
+      // Loop through pieces already on board for this player and mark spaces they can move to
+      for (var i = 0; i < this.gameBoard.length; i++) {
+        // console.log("In determinePossibleMoves loop i is " + i + " game board array row is ", this.gameBoardArray[i]);
+        if (this.gameBoard[i].playerOnSpace === player) {
+          // We've found a piece for the input player
+          // Keep track of number of pieces we have on the board
+          numPiecesOnBoard += 1;
+
+          // See what would happen if we move it the number our dice gave us
+
+          // Get the game board space index we might be able to move to
+          // Get our current space value, and where numerically we are in our path
+          var gameSpaceNumber = this.gameBoard[i].spaceNumber;
+          var positionInPath = indexMapToUse.indexOf(gameSpaceNumber);
+          var newPositionInPath = positionInPath + diceRoll;
+          // console.log("In determinePossibleMoves: diceRoll = " + diceRoll + " gameSpaceNumber = " + gameSpaceNumber + ", positionInPath = " + positionInPath + ", newPositionInPath = " + newPositionInPath);
+
+          // Can only consider this piece if moving it doesn't push us past the end of the board
+          if (newPositionInPath < indexMapToUse.length) {
+            // So far we know that this doesn't move us illegally passed the edge of the board.
+
+            // Get the game space number for this space
+            var newGameSpaceNumber = indexMapToUse[newPositionInPath];
+
+            // We can consider this space if we aren't already on it.
+            if (this.gameBoard[newGameSpaceNumber].playerOnSpace !== player) {
+
+              // We can't move here if this is a rosette AND the opponent has a piece on this space
+              if (this.gameBoard[newGameSpaceNumber].isRosette && this.gameBoard[newGameSpaceNumber].playerOnSpace === otherPlayer) {
+                // We can't go here - rosette and other player
+                this.gameBoard[newGameSpaceNumber].canBeMovedTo = false;
+
+              } else {
+                // We should be able to move here - it isn't a rosette with the other player on it
+                this.gameBoard[newGameSpaceNumber].canBeMovedTo = true;
+                this.gameBoard[newGameSpaceNumber].potentialPreviousSpaceNumber = gameSpaceNumber;
+                this.gameBoard[newGameSpaceNumber].potentialPieceNumber = this.gameBoard[gameSpaceNumber].pieceNumber;
+
+
+              }
+            } // we aren't already on space
+          } // we aren't already on space
+
+        } else {
+          //We are already on ths space - can't move here
+          //Nothing to do? (don't set canMoveTo false...might have previously been set by previous test )
+          // this.gameBoardArray[i].canBeMovedTo = false; DON'T DO THIS
+
+        }
+      } //for
+
+      //Check if a piece off the board can move
+      var piecesAtStart = 0;
+
+      piecesAtStart = (player === humanPlayer) ?
+        numberOfPieces - numPiecesOnBoard - this.numberPlayer1PiecesHome :
+        numberOfPieces - numPiecesOnBoard - this.numberPlayer2PiecesHome;
+
+      if (piecesAtStart > 0) {
+        //Another possibility is to move one of our start pieces - see if it can move...
+        // Get the game space number for this space - we will be in our "safe" zone, so
+        // less checking required
+        var newGameSpaceNumber = indexMapToUse[diceRoll - 1];
+
+        // If we aren't already on this piece, we can move here
+        if (this.gameBoard[newGameSpaceNumber].playerOnSpace !== player) {
+          this.gameBoard[newGameSpaceNumber].canBeMovedTo = true;
+          this.gameBoard[newGameSpaceNumber].potentialPreviousSpaceNumber = pieceStartIndex;
+          //Get the index of the first piece that is not yet on the board for this player.
+          var gamePieceArray = game.getGamePieceArray();
+          for (var i=0; i<numberOfPieces; i++) {
+            if (gamePieceArray[i].gameBoardSpaceIndex === pieceStartIndex) {
+              this.gameBoard[newGameSpaceNumber].potentialPieceNumber = i;
+              break;
+            }
+          } //for
+
+        } else {
+          this.gameBoard[newGameSpaceNumber].canBeMovedTo = false;
+        }
+      }
+
+    } //determinePossibleMoves
+
 
   showPossibleMoves() {
     // Show on the game board the number of possible moves for the current player based on the dice roll
     // Returns number of possible moves
     // console.log("In showPossibleMoves for player " + this.currentPlayer);
     // console.log("Dice roll is " + this.diceRoll);
-    var movesAvailable = 0;
-    var pieceArray = game.getGamePieceArray();
-
-    var offPieceAlreadySelected = false;
-
-    //Reset canMoveTo property for the game board
-    for (var i = 0; i < maxSpacesOnBoard; i++) {
-      this.gameBoard[i].canBeMovedTo = false;
-    }
-
-    // Loop through all the game pieces for the current player to see if that piece can move
-    var canMove = false;
-    for (var i = 0; i < numberOfPieces; i++) {
-      if (!pieceArray[i].pieceIsHome) {
-        //Piece is not home.
-        if (pieceArray[i].gameBoardSpaceIndex !== pieceStartIndex) {
-          //This piece is on the board - definitely test if it can move
-          canMove = pieceArray[i].determineIfCanMove(this.diceRoll);
-
-        } else {
-          //Piece is not on the board - since we already know it isn't home, only test ONE of the
-          //start pieces
-          if (!offPieceAlreadySelected) {
-            canMove = pieceArray[i].determineIfCanMove(this.diceRoll);
-            //Set flag so we don't check a start piece again
-            offPieceAlreadySelected = true;
-          } //start piece not yet selected (but it is now)
-        } //piece is in the start area
-      } // piece is not home
-    } //for
+    this.determinePossibleMoves(this.currentPlayer, this.diceRoll);
 
     if (this.gamePlayType === twoPlayerGame || (this.gamePlayType !== twoPlayerGame && this.currentPlayer === player1)) {
       //Two player side-by-side game or its the human player's turn against ai - light up possible spaces for the move decision
       //Light up board spaces that can be moved to
-      for (i = 0; i < maxSpacesOnBoard; i++) {
+      var movesAvailable = 0;
+      for (var i = 0; i < maxSpacesOnBoard; i++) {
         if (this.gameBoard[i].canBeMovedTo) {
           movesAvailable += 1;
           this.gameBoard[i].showPossibleMoveIndicator();
@@ -991,9 +1004,11 @@ class UrGame {
       game.switchToOtherPlayer();
 
       //Automatically roll for the ai
-      game.rollDice();
-
-    }
+      // if (game.currentPlayer === aiPlayer) {
+      //   game.rollDice();
+      // }
+      
+    } //no moves found for ai
 
   } //receiveAiNextMove
 
