@@ -198,9 +198,6 @@ class UrAI {
   constructor(difficulty) {
 
     this.difficultyLevel = difficulty;
-    // this.gameBoardArray = [];
-    // this.gameBoardArray = [...boardArray];
-    // this.possibleMovesArray = [];
     this.nextGameSpaceToMoveTo = -1;
 
   } //constructor
@@ -208,8 +205,6 @@ class UrAI {
 
   determineNextMoveSpaceNumber(boardArray) {
     //Use the Ur server to figure out the next move for the computer
-
-    // this.gameBoardArray = boardArray;
 
     var nextMove = -1;
     var urlText = "/nextMove";
@@ -905,12 +900,12 @@ class UrGame {
             } // we aren't already on space
           } // we aren't already on space
 
-        } else {
-          //We are already on ths space - can't move here
-          //Nothing to do? (don't set canMoveTo false...might have previously been set by previous test )
-          // this.gameBoardArray[i].canBeMovedTo = false; DON'T DO THIS
-
-        }
+        } //else {
+        //   //We are already on ths space - can't move here
+        //   //Nothing to do? (don't set canMoveTo false...might have previously been set by previous test )
+        //   // this.gameBoardArray[i].canBeMovedTo = false; DON'T DO THIS
+        //
+        // }
       } //for
 
       //Check if a piece off the board can move

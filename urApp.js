@@ -1,4 +1,4 @@
-//Main node.js server file
+
 
 // Constants to specify the difficulty level for the AI to choose the next move for computer
 const easyDifficultyLevel = 0;
@@ -44,6 +44,7 @@ class GameBoard {
 
   generatePossibleMovesArray() {
     //Create an array of possible moves by examining those identified in the gameBoardArray
+    //Note that if determinePossibleMoves is called, it automatically does the same processing so don't call this, too
     this.possibleMovesArray = [];
     for (var i = 0; i < this.gameBoardArray.length; i++) {
       if (this.gameBoardArray[i].canBeMovedTo) {
@@ -75,7 +76,6 @@ class GameBoard {
         aiPlayerScore += this.incrementBoardScore(player2IndexMap, i);
 
       }
-
     } //for
 
     // Add in spaces traveled for pieces off the board
@@ -147,6 +147,7 @@ class GameBoard {
       this.gameBoardArray[i].canBeMovedTo = false;
     }
 
+    this.possibleMovesArray = [];
     // Loop through pieces already on board for this player and mark spaces they can move to
     for (var i = 0; i < this.gameBoardArray.length; i++) {
       // console.log("In determinePossibleMoves loop i is " + i + " game board array row is ", this.gameBoardArray[i]);
@@ -183,6 +184,8 @@ class GameBoard {
               // We should be able to move here - it isn't a rosette with the other player on it
               this.gameBoardArray[newGameSpaceNumber].canBeMovedTo = true;
               this.gameBoardArray[newGameSpaceNumber].potentialPreviousSpaceNumber = gameSpaceNumber;
+              //Remember this as a possible move
+              this.possibleMovesArray.push(newGameSpaceNumber);
 
             }
           } // we aren't already on space
@@ -238,9 +241,6 @@ class GameBoard {
 
     if (diceRoll > 0) {
       this.determinePossibleMoves(player, diceRoll);
-
-      // Create an array of possible moves
-      this.generatePossibleMovesArray();
 
       //Use the "medium" difficulty algorithm to pick which piece to move
       var nextMove = -1;
@@ -363,6 +363,7 @@ app.post("/nextMove", function(req, res) {
   var data = req.body;
   var difficultyLevel = data.difficulty;
   var gameBoard = new GameBoard(data.gameBoardArray, data.player1PiecesHome, data.player2PiecesHome, aiPlayer);
+  //The game board comes in with spaces already marked as "canBeMovedTo", os need to collect those values just this time
   gameBoard.generatePossibleMovesArray();
 
   console.log("Difficulty: " + difficultyLevel);
