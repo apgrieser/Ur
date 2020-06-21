@@ -758,9 +758,17 @@ class UrGame {
 
       //Clear out any secondary status
       // Leave the human player status up when the computer goes (because sometimes it's hard to tell what's going on)
-      if (this.gamePlayType !== twoPlayerGame && this.currentPlayer !== aiPlayer) {
+      if (this.gamePlayType === twoPlayerGame) {
+        //Clear out second status always for two player games
+        this.updatePlayerSecondStatus(player1, "");
+      }  else if (this.currentPlayer !== aiPlayer) {
+        //If not a two player game (playing against the ai), then only clear out second status when it isn't the ai's turn
         this.updatePlayerSecondStatus(player1, "");
       }
+
+      // if (this.gamePlayType !== twoPlayerGame && this.currentPlayer !== aiPlayer) {
+      //   this.updatePlayerSecondStatus(player1, "");
+      // } 
       this.updatePlayerSecondStatus(player2, "");
 
       //If it's not a two player game, this is a good time to clear out the computer's status

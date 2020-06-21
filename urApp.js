@@ -6,8 +6,8 @@ const mediumDifficultyLevel = 1;
 const hardDifficultyLevel = 2;
 
 // const moveDepth = 3; //number of moves to look ahead for hard difficulty play level
-const numberGameSimulations = 15000;
-const numberTurnsToSimulate = 25;
+const numberGameSimulations = 10000;
+const numberTurnsToSimulate = 20;
 
 const humanPlayer = 1;
 const aiPlayer = 2;
