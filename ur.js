@@ -175,7 +175,7 @@ $(".tcell").click(function(event) {
   //Get the game board space index from the event target id
   var gameBoardSpaceIndex = parseInt(event.target.id.slice(-2), 10);
   if (event.target.id !== "") {
-    game.gameBoard[gameBoardSpaceIndex].manageGameBoardSpaceClick();
+    game.gameBoard[gameBoardSpaceIndex].manageGameBoardSpaceMove();
   }
 }); //table cell click event
 
@@ -321,8 +321,9 @@ class GameBoardSpace {
   } //clearGameSpace
 
 
-  manageGameBoardSpaceClick() {
+  manageGameBoardSpaceMove() {
     //Method that responds to a game board space being clicked on (meaning player wants to move here)
+    //or the server returning a game board space for the ai to move to
 
     //Only do anything if this a space that can be moved to by a player (based on previous processing)
     if (this.canBeMovedTo) {
@@ -374,7 +375,7 @@ class GameBoardSpace {
       } //game not over
     } //space can be moved to
 
-  } //manageGameBoardSpaceClick
+  } //manageGameBoardSpaceMove
 
 
   generateHtmlIdForMoveIndicator() {
@@ -983,7 +984,7 @@ class UrGame {
   receiveAiNextMove(nextMove) {
     // Called from the UrAI object after the server figures out the next move for the AI.
     if (nextMove > -1) {
-      game.gameBoard[nextMove].manageGameBoardSpaceClick();
+      game.gameBoard[nextMove].manageGameBoardSpaceMove();
 
     } else {
       //No moves for ai

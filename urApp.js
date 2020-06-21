@@ -6,8 +6,8 @@ const mediumDifficultyLevel = 1;
 const hardDifficultyLevel = 2;
 
 // const moveDepth = 3; //number of moves to look ahead for hard difficulty play level
-const numberGameSimulations = 1000;
-const numberTurnsToSimulate = 10;
+const numberGameSimulations = 15000;
+const numberTurnsToSimulate = 25;
 
 const humanPlayer = 1;
 const aiPlayer = 2;
@@ -79,8 +79,10 @@ class GameBoard {
     } //for
 
     // Add in spaces traveled for pieces off the board
-    humanPlayerScore += this.humanPlayerPiecesHome * player1IndexMap.length;
-    aiPlayerScore += this.aiPlayerPiecesHome * player2IndexMap.length;
+    //Adding weight to pieces home to see if it encourages ai to take pieces off the board
+    const piecesHomeWeight = 2;
+    humanPlayerScore += piecesHomeWeight*(this.humanPlayerPiecesHome * player1IndexMap.length);
+    aiPlayerScore += piecesHomeWeight*(this.aiPlayerPiecesHome * player2IndexMap.length);
 
     // Save the board score in the class object
     // The board score is number of spaces moved for ai = number of spaces moved for human
@@ -252,7 +254,7 @@ class GameBoard {
       //Just to see what happens...what if returns random move instead of using medium algorithm?
       if (this.generatePossibleMovesArray.length > 0) {
         nextMove = this.possibleMovesArray[getRandomInt(this.possibleMovesArray.length - 1)];
-        console.log("In movePiece for player " + player + ", diceRoll " + diceRoll + ", nextMove " + nextMove, this.possibleMovesArray);
+        //console.log("In movePiece for player " + player + ", diceRoll " + diceRoll + ", nextMove " + nextMove, this.possibleMovesArray);
       }
 
 
@@ -377,16 +379,16 @@ app.post("/nextMove", function(req, res) {
   //The game board comes in with spaces already marked as "canBeMovedTo", os need to collect those values just this time
   gameBoard.generatePossibleMovesArray();
 
-  console.log("Difficulty: " + difficultyLevel);
-  console.log("num home player 1: ", gameBoard.humanPlayerPiecesHome, "num home player 2: ", gameBoard.aiPlayerPiecesHome);
-  console.log("Length: ", gameBoard.gameBoardArray.length);
-  console.log("Possible Moves: ", gameBoard.possibleMovesArray);
+  // console.log("Difficulty: " + difficultyLevel);
+  // console.log("num home player 1: ", gameBoard.humanPlayerPiecesHome, "num home player 2: ", gameBoard.aiPlayerPiecesHome);
+  // console.log("Length: ", gameBoard.gameBoardArray.length);
+  // console.log("Possible Moves: ", gameBoard.possibleMovesArray);
 
   var nextMove = -1;
 
   if (gameBoard.possibleMovesArray.length === 0) {
     //Weird case - shouldn't happen??
-    console.log("In post for /nextMove - no possible moves");
+    //console.log("In post for /nextMove - no possible moves");
 
   } else if (gameBoard.possibleMovesArray.length === 1) {
     //Only one possible move - use that.
@@ -405,6 +407,7 @@ app.post("/nextMove", function(req, res) {
   } else {
     //simulation difficulty processing - lookahead many different times to choose next move
     nextMove = findNextSpaceHardDifficulty(gameBoard, aiPlayer);
+    //console.log("After finding space hard: " + nextMove);
     // console.log("After findNextSpaceHardDifficulty: nextMove is " + nextMove);
 
   }
@@ -549,8 +552,7 @@ function findNextSpaceMediumDifficulty(gameBoard, player) {
           // See if the new piece would come from start
           //console.log("In findNextSpaceMediumDifficulty - potential piece number: ", gameBoardArray[priorityArray[i][j]].potentialPieceNumber);
           if (gameBoardArray[priorityArray[i][j]].potentialPreviousSpaceNumber === startSpace) {
-            //We hcan possible start a new piece - remember this
-
+            //We can possibly start a new piece - remember this
             startNewPiece = true;
             //console.log("In findNextSpaceMediumDifficulty - setting startNewPiece true");
           }
@@ -623,7 +625,7 @@ function findNextSpaceHardDifficulty(gameBoard, player) {
     //Create a new game board to run the simulation based on the input gameboard
     // console.log("In findNextSpaceHardDifficulty for possible move " + gameBoard.possibleMovesArray[i]);
     var possibleMoveScoreResults = [];
-
+    //console.log("Number of simulations: " + numberGameSimulations);
     for (var j = 0; j < numberGameSimulations; j++) {
 
       //Now simulate other moves (or to the end of the game)
@@ -690,7 +692,7 @@ function findNextSpaceHardDifficulty(gameBoard, player) {
   var nextMove = gameBoard.possibleMovesArray[simGameResults.indexOf(Math.max.apply(null, simGameResults))];
   // console.log("In findNextSpaceHardDifficulty; possible moves: ", gameBoard.possibleMovesArray);
   // console.log("In findNextSpaceHardDifficulty; max score: ", Math.max.apply(null, simGameResults), " possible moves array index: ", simGameResults.indexOf(Math.max.apply(null, simGameResults)));
-  // console.log("In findNextSpaceHardDifficulty: returning nextMove: " + nextMove);
+  //console.log("In findNextSpaceHardDifficulty: possible moves: ", gameBoard.possibleMovesArray, " returning nextMove: " + nextMove);
   return nextMove;
 
 } //findNextSpaceHardDifficulty
