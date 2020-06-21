@@ -185,7 +185,8 @@ class GameBoard {
               this.gameBoardArray[newGameSpaceNumber].canBeMovedTo = true;
               this.gameBoardArray[newGameSpaceNumber].potentialPreviousSpaceNumber = gameSpaceNumber;
               //Remember this as a possible move
-              this.possibleMovesArray.push(newGameSpaceNumber);
+              this.possibleMovesArray.push(gameSpaceNumber);
+
 
             }
           } // we aren't already on space
@@ -241,12 +242,22 @@ class GameBoard {
 
     if (diceRoll > 0) {
       this.determinePossibleMoves(player, diceRoll);
+      this.generatePossibleMovesArray();
 
       //Use the "medium" difficulty algorithm to pick which piece to move
       var nextMove = -1;
 
       // if (level === 1  || level < numberTurnsToSimulate) {
-      nextMove = findNextSpaceMediumDifficulty(this, player);
+      //console.log("In movePiece - possible moves are: ", this.possibleMovesArray );
+      //Just to see what happens...what if returns random move instead of using medium algorithm?
+      if (this.generatePossibleMovesArray.length > 0) {
+        nextMove = this.possibleMovesArray[getRandomInt(this.possibleMovesArray.length - 1)];
+        console.log("In movePiece for player " + player + ", diceRoll " + diceRoll + ", nextMove " + nextMove, this.possibleMovesArray);
+      }
+
+
+      //nextMove = findNextSpaceMediumDifficulty(this, player);
+      //console.log("In movePiece - nextMove is " + nextMove);
 
       // } else {
       //   nextMove = findNextSpaceHardDifficulty(this, player, level - 1);
@@ -488,22 +499,19 @@ function findNextSpaceMediumDifficulty(gameBoard, player) {
 
     if (gameBoardArray[possibleMovesArray[i]].isRosette || gameBoardArray[possibleMovesArray[i]].playerOnSpace) {
       //This space is a rosette or the other player is on the space - this is a priority one move
-      // priorityOneArray.push(possibleMovesArray[i]);
       priorityArray[0].push(possibleMovesArray[i]);
 
     } else if (possibleMovesArray[i] === indexMapToUse[indexMapToUse.length - 1]) {
       //Piece would go home
-      // priorityTwoArray.push(possibleMovesArray[i]);
       priorityArray[1].push(possibleMovesArray[i]);
 
-    } else if (indexMapToUse.includes(possibleMovesArray[i], (indexMapToUse.length - 2)) || gameBoardArray[possibleMovesArray[i]].potentialPreviousSpaceNumber === -1) {
-      //Piece would be in the "safe" zone OR it is a piece currently not on the board
-      // priorityThreeArray.push(possibleMovesArray[i]);
+    } else if (indexMapToUse.includes(possibleMovesArray[i], (indexMapToUse.length - 2)) || indexMapToUse.includes(possibleMovesArray[i], (indexMapToUse.length - 3))) {
+      //Piece would be in the "safe" zone near exit (OR it is a piece currently not on the board - moved to lower priority)
+      //console.log("In findNextSpaceMediumDifficulty - piece would go in safe zone near exit ", possibleMovesArray[i]);
       priorityArray[2].push(possibleMovesArray[i]);
 
     } else {
       //Put the move in the fourth array - we'll eventually chose the one closest to home.
-      // priorityFourArray.push(possibleMovesArray[i]);
       priorityArray[3].push(possibleMovesArray[i]);
     }
   } //for
@@ -530,19 +538,45 @@ function findNextSpaceMediumDifficulty(gameBoard, player) {
 
       if (i === (priorityArray.length - 1)) {
         // We made it to the last priority (that is, no better moves found); this is a special case
+
         // We want to pick the piece closest to home UNLESS it is the shared rosette piece in the
         // danger zone - if we have a choice (that is, there are other moves in this priority),
         // take the shared rosette space out of the possibilities (splicing it out of our choices)
+        // OR we might want to move a new piece from start in if we have one.  If moving a new piece
+        // is an option, randomly choose whether to add a new piece or to move one closest to home
+        var startNewPiece = false;
         for (var j = 0; j < priorityArray[i].length; j++) {
+          // See if the new piece would come from start
+          //console.log("In findNextSpaceMediumDifficulty - potential piece number: ", gameBoardArray[priorityArray[i][j]].potentialPieceNumber);
+          if (gameBoardArray[priorityArray[i][j]].potentialPreviousSpaceNumber === startSpace) {
+            //We hcan possible start a new piece - remember this
+
+            startNewPiece = true;
+            //console.log("In findNextSpaceMediumDifficulty - setting startNewPiece true");
+          }
+          // See if the next move involves the shared rosette; we will only move that if it's our only option
           if (gameBoardArray[priorityArray[i][j]].potentialPreviousSpaceNumber === sharedRosetteSpace) {
             //We would be moving a piece on the shared rosette in the danger zone -
             //prevent this from happening by taking it out of the possible moves for this priority
             priorityArray[i].splice(j, 1);
             // console.log("medium - removed the shared rosette from possible move ", priorityFourArray);
           }
+
         } //for
 
         //Choose the piece closest to home (highest gameboard space number)
+        //Either put a new piece om the board (if we have any) or move the one closest to home
+        if (startNewPiece) {
+          //Randomly decide if we want to put a new piece in or move the one closest to home.
+          //console.log("In findNextSpaceMediumDifficulty - after startNewPiece test");
+          if (getRandomInt(1) === 0) {
+            nextMove = Math.min.apply(null, priorityArray[i]);
+            //console.log("In findNextSpaceMediumDifficulty: choosing to put in a new piece - nextMove is " + nextMove);
+            break;
+          } else {
+            //console.log("In findNextSpaceMediumDifficulty: choosing NOT to put in a new piece")
+          }
+        }
         nextMove = Math.max.apply(null, priorityArray[i]);
         break;
       }
@@ -550,6 +584,7 @@ function findNextSpaceMediumDifficulty(gameBoard, player) {
       //If we get here, we aren't checking the lowest priority
       //Take a random move in the highest priority that has values, then exit the loop
       nextMove = priorityArray[i][getRandomInt(priorityArray[i].length - 1)];
+      //console.log("In findNextSpaceMediumDifficulty - choosing the max for next move: " + nextMove);
       break;
     }
   } //for
@@ -641,14 +676,7 @@ function findNextSpaceHardDifficulty(gameBoard, player) {
       avg = possibleMoveScoreResults.reduce(function(sum, x) {
         return sum + x
       }, 0) / possibleMoveScoreResults.length;
-      // for (m = 0; m < possibleMoveScoreResults.length; m++) {
-      //   avg += possibleMoveScoreResults[m];
-      // }
-      // avg = avg / possibleMoveScoreResults.length;
-      // } else {
-      //   //There were not possible moves so set average to 0 (?)
-      //   avg = 0;
-      // }
+
       // console.log("Average of ", possibleMoveScoreResults, " is ", avg);
     }
     //Save the average for this path

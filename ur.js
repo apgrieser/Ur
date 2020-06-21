@@ -119,7 +119,7 @@ $("#setAIE").click(function(event) {
 
 $("#setAIM").click(function(event) {
   // console.log("Setting to play computer (medium) pressed");
-  if (confirm("Are you sure you want to play the computer (heuristic mode)?  This will restart the game.")) {
+  if (confirm("Are you sure you want to play the computer (traditional mode)?  This will restart the game.")) {
     $("#setAIM").addClass("active");
     $("#setAIE").removeClass("active");
     $("#setAIH").removeClass("active");
