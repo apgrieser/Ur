@@ -104,7 +104,7 @@ $(".restart-button").click(function(event) {
 
 $("#setAIE").click(function(event) {
   // console.log("Setting to play computer (easy) pressed");
-  if (confirm("Are you sure you want to play the computer (random difficulty mode)?  This will restart the game.")) {
+  if (confirm("Are you sure you want to play the computer (random mode)?  This will restart the game.")) {
     $("#setAIE").addClass("active");
     $("#setAIM").removeClass("active");
     $("#setAIH").removeClass("active");
@@ -119,7 +119,7 @@ $("#setAIE").click(function(event) {
 
 $("#setAIM").click(function(event) {
   // console.log("Setting to play computer (medium) pressed");
-  if (confirm("Are you sure you want to play the computer (heuristic difficulty mode)?  This will restart the game.")) {
+  if (confirm("Are you sure you want to play the computer (heuristic mode)?  This will restart the game.")) {
     $("#setAIM").addClass("active");
     $("#setAIE").removeClass("active");
     $("#setAIH").removeClass("active");
@@ -132,7 +132,7 @@ $("#setAIM").click(function(event) {
 
 $("#setAIH").click(function(event) {
   // console.log("Setting to play computer (hard) pressed");
-  if (confirm("Are you sure you want to play the computer (simulations difficulty mode)?  This will restart the game.")) {
+  if (confirm("Are you sure you want to play the computer (simulations mode)?  This will restart the game.")) {
     $("#setAIH").addClass("active");
     $("#setAIM").removeClass("active");
     $("#setAIE").removeClass("active");
