@@ -143,7 +143,7 @@ $("#setAIH").click(function(event) {
   }
 });
 
-$("#setHumanLocal").click(function(ecvent) {
+$("#setHumanLocal").click(function(event) {
   // console.log("Setting to play a human local pressed");
   if (confirm("Are you sure you want to play with another person?  This will restart the game.")) {
     $("#setHumanLocal").addClass("active");
@@ -768,7 +768,7 @@ class UrGame {
 
       // if (this.gamePlayType !== twoPlayerGame && this.currentPlayer !== aiPlayer) {
       //   this.updatePlayerSecondStatus(player1, "");
-      // } 
+      // }
       this.updatePlayerSecondStatus(player2, "");
 
       //If it's not a two player game, this is a good time to clear out the computer's status
